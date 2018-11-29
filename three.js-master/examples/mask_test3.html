@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+<script src="src/minified/plugins/CSSPlugin.min.js"></script>
+<script src="src/minified/easing/EasePack.min.js"></script>
+<script src="src/minified/TweenLite.min.js"></script>
+<script src="src/jquery-1.11.0.min.js"></script>
+
+<script type="text/javascript" src="js/greensock/TweenMax.min.js"></script>
+<script type="text/javascript" src="fancyapps-fancyBox-18d1712/lib/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="fancyapps-fancyBox-18d1712/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+<script type="text/javascript" src="fancyapps-fancyBox-18d1712/source/jquery.fancybox.js?v=2.1.5"></script>
+<link rel="stylesheet" type="text/css" href="fancyapps-fancyBox-18d1712/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+<link rel="stylesheet" type="text/css" href="fancyapps-fancyBox-18d1712/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" />
+<script type="text/javascript" src="fancyapps-fancyBox-18d1712/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<link rel="stylesheet" type="text/css" href="fancyapps-fancyBox-18d1712/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" />
+<script type="text/javascript" src="fancyapps-fancyBox-18d1712/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+<script type="text/javascript" src="fancyapps-fancyBox-18d1712/source/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
+<script src="src/imagesloaded.pkgd.min.js"></script>
+<script src="js/jquery.lettering-0.6.1.min.js"></script>
+<script src="js/preloadjs-NEXT.combined.js"></script>
+<link rel="stylesheet" type="text/css" href="js/dist/sweetalert.css">
+<script src="js/dist/sweetalert.min.js"></script>
+</head>
+
+<body>
+
+<script src="../build/three.js"></script>
+
+		<script src="js/shaders/CopyShader.js"></script>
+
+		<script src="js/postprocessing/EffectComposer.js"></script>
+		<script src="js/postprocessing/ClearPass.js"></script>
+		<script src="js/postprocessing/TexturePass.js"></script>
+		<script src="js/postprocessing/ShaderPass.js"></script>
+		<script src="js/postprocessing/MaskPass.js"></script>
+
+		<script src="js/Detector.js"></script>
+		<script src="js/libs/stats.min.js"></script>
+
+
+
+<script>
+var container;
+var camera, scene, renderer, objects;
+var particleLight;
+var textureCube;
+var dae_mac;
+var loader_mac = new THREE.ColladaLoader();
+var dae_iphone;
+var loader_iphone = new THREE.ColladaLoader();
+var dae_air;
+var loader_air = new THREE.ColladaLoader();
+var geoArray=new Array()
+
+
+
+function createMaterial(){
+	
+	
+	
+	
+	
+	createDAE();
+	animate();
+}
+
+
+function init(){
+	load_mac()
+}
+
+function createDAE() {
+
+  container = document.createElement( 'div' );
+  document.body.appendChild( container );
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+  camera.position.set( 2, 4, 20 );
+  
+  scene = new THREE.Scene();
+  scene.add( dae_mac );
+  scene.add( dae_iphone );
+  scene.add( dae_air );
+  particleLight = new THREE.Mesh( new THREE.SphereGeometry( 0.1, 0.1, 0.1 ), new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
+  particleLight.position.set( 0, 4, 5 );
+  scene.add( particleLight );
+  scene.add( new THREE.AmbientLight( 0xffffff ) );
+  box = new THREE.Mesh( new THREE.BoxGeometry( 4, 4, 4 ) );
+scene.add( box );
+  /*var pointLight = new THREE.PointLight( 0xffffff, 1 );
+  particleLight.add( pointLight );
+  
+var directionalLight = new THREE.DirectionalLight(0xeeeeee );
+				directionalLight.position.x = Math.random() - 0.5;
+				directionalLight.position.y = Math.random() - 0.5;
+				directionalLight.position.z = Math.random() - 0.5;
+				directionalLight.position.normalize();
+				scene.add( directionalLight );*/
+  
+  
+ /* hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
+	scene.add( hemiLight );*/
+  
+  renderer=new THREE.WebGLRenderer({
+                    antialias:true,//antialias:true/false是否开启反锯齿
+                    precision:"highp",//precision:highp/mediump/lowp着色精度选择
+                    alpha:true,//alpha:true/false是否可以设置背景色透明
+                    premultipliedAlpha:false,//?
+                    stencil:false,//?
+                    preserveDrawingBuffer:true,//preserveDrawingBuffer:true/false是否保存绘图缓冲
+                    maxLights:1//maxLights:最大灯光数
+                    });
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  //renderer.autoClear = false;
+  //renderer.setClearColor(0xf3f3f3);
+  container.appendChild( renderer.domElement );
+  var controls = new THREE.OrbitControls( camera, renderer.domElement );
+  
+  
+  //
+  
+  window.addEventListener( 'resize', onWindowResize, false );
+
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+//
+
+function animate() {
+  requestAnimationFrame( animate );
+  render();
+}
+
+
+
+function render() {
+camera.lookAt( scene.position );
+renderer.render( scene, camera );
+
+}
+
+init()
+</script>
+
+</body>
+</html>

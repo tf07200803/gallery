@@ -1,0 +1,45 @@
+<input type="text" name="" id="" value="ªì©l­È" class="gray" onclick="if(this.value=='ªì©l­È'){this.value='';}" onblur="if(this.value=='') {this.value='ªì©l­È';}" />
+
+
+
+function checkInputValue(){
+	
+	var $text=$( "input:text" ); 
+	$text.each(function(i) {
+       
+		$(this).attr("initValue",$(this).val())
+		$(this).click(function(){
+			
+			if($(this).val()==$(this).attr("initValue")){
+				$(this).val("")
+			}
+		})
+		
+		$(this).blur(function(){
+			if($(this).val()==""){
+				$(this).val($(this).attr("initValue"))
+			}
+		})
+		
+    });
+
+
+var $tel=$('input[type="tel"]')
+	$tel.each(function(i) {
+       
+		$(this).attr("initValue",$(this).val())
+		$(this).click(function(){
+			
+			if($(this).val()==$(this).attr("initValue")){
+				$(this).val("")
+			}
+		})
+		
+		$(this).blur(function(){
+			if($(this).val()==""){
+				$(this).val($(this).attr("initValue"))
+			}
+		})
+		
+    });
+}

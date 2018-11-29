@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<script src="src/jquery-1.11.0.min.js"></script>
+<script>
+
+$().ready(function(){
+	/*$.get("proxy.php?url=http://demo.artstudio.com.tw/15/20161125/data.txt", function(data) {
+	alert("Data Loaded: " + data);
+	});*/
+	/*$.get("proxy.php?url=http://demo.artstudio.com.tw/15/20161125/helloworld.php", function(data) {
+	alert("Data Loaded: " + data);
+	});*/
+	
+	var URLs="proxy.php?url=http://demo.artstudio.com.tw/15/20161125/helloworld.php?callback=?";
+           
+            $.ajax({
+                url: URLs,
+                type:"GET",
+				crossDomain: true,
+				
+                dataType:'jsonp',
+
+                success: function(msg){
+                    console.log(msg)
+					
+					
+                },
+
+                 error:function(xhr, ajaxOptions, thrownError){ 
+                    alert(xhr.status); 
+                    console.log(thrownError); 
+                 }
+            });
+	
+})
+
+
+
+
+
+</script>
+
+
+<style type="text/css">
+
+
+</style>
+
+</head>
+
+<body>
+<div id="container">
+
+
+</div>
+
+<div id="target"></div>
+</body>
+</html>

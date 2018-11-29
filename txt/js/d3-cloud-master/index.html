@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="build/d3.layout.cloud.js"></script>
+
+<link href="css.css" rel="stylesheet" type="text/css" />
+<style>
+    #cut5{
+		width:100%;
+		height:100%;
+	}
+</style>
+ 
+</head>
+
+<body>
+<div id="container">
+<div id="cut5"></div>
+</div>
+
+</body>
+
+
+<script type="text/javascript">
+    var fill = d3.scale.category20();
+    d3.csv("wordTfIdf.csv",function(data){
+    console.log(data);
+    var word = ["碧兒泉Biotherm","碧歐斯Bio-essence","薇姿VICHY","雅詩蘭黛Estee Lauder","蜜妮Biore","莉婕Kao Liese","巴黎萊雅L'oreal Paris","巴黎卡詩Kérastase","法倈麗ZA","植村秀shu uemura","Keihls","朵法Darphin","露華濃Revlon","米羅蔻mirokal","娜芙NOV","理膚保水La Roche-Posay","蘇菲娜SOFINA","詩迪奧綺BEVY C.","海洋拉娜LA MER","希思黎Sisley","媚比琳Maybelline","蘭蔻LANCOME","怡嘉DKNY","美妍社RoseBeauty","雅男仕LAB SERIES","蔻蘿蘭KLORANE","逸萱秀Kao Essential","美舒律megrhythm","花王SOFINA","露得清Neutrogena","遠傳FETnet","統一","費雪寶寶Fisher-Price","豐田汽車Toyota","BMW","FashionGuide","Reebok","飛利浦Philips","HTC","華歌爾Wacoal","BOSE","雅虎YAHOO","商周Alive","全家Family Mart","東森新聞","3M","得利dulux","膳魔師THERMOS","樂高LEGO","heartsonfire","台新銀行","詩曼特Smarter","愛迪達adidas","EASY SHOP","點睛品emphasis","博士倫bausch","八仙樂園","甲山林jsl","合康","漢倉","有巢氏"];
+	
+    var value = ["a","b"];
+    for(i in data)
+    {
+        word[i] = data[i].word;
+        value[i] = data[i].tfidf;
+    }
+    console.log(word);
+    console.log(value);
+    d3.layout.cloud().size([960, 600])
+      .words(word.map(function(d) {return {text: d, size: 10 + Math.random() * 50};}))
+      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Impact")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+   function draw(words) {
+      d3.select("#cut5").append("svg")
+        .attr("width", 960)
+        .attr("height", 600)
+        .append("g")
+        .attr("transform", "translate(150,150)")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        .style("fill", function(d, i) { return fill(i); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+    }
+});
+</script>
+
+
+
+
+</html>

@@ -1,0 +1,201 @@
+#team_table tr:nth-child(odd){
+	background-color:#999999;
+}
+#team_table tr:nth-child(even){
+	background-color:#b5b5b5;
+}
+
+#mentable tr:last-of-type td{
+	 border-bottom:1pt solid #fff;
+}
+
+
+#vipdata tr td:first-of-type{
+          padding-left:20px;
+  }
+
+pointer-events : none; 
+
+
+.rClass{
+	-webkit-transform: scale(2, 2);
+	-moz-transform:    scale(2, 2);
+	-ms-transform:     scale(2, 2);
+	-o-transform:      scale(2, 2);
+	transform:         scale(2, 2);
+}
+
+#d5{
+	position:absolute;
+	background-image:url(images/0410008_03.png);
+	width:47px;
+	height:47px;
+	left: 507px;
+	top: 542px;
+	cursor:pointer;
+	animation-name: d5;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+	animation-iteration-count:infinite ;
+	animation-play-state: paused;
+	animation-delay: 3.5s;
+
+/* Safari and Chrome: */
+	-webkit-animation-name: d5;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-fill-mode: forwards;
+	-webkit-animation-iteration-count:infinite ;
+	-webkit-animation-play-state: paused;
+	-webkit-animation-delay: 3.5s;
+}
+@keyframes d5
+{
+0%   {
+	left:181px;
+	}
+	50%   {
+	left:201px;
+	}
+100% {
+	left:181px;
+	}
+
+}
+@-webkit-keyframes d5 
+{
+0%   {
+	left:181px;
+	}
+	50%   {
+	left:201px;
+	}
+100% {
+	left:181px;
+	}
+
+}
+
+
+
+document.getElementById("c2_2").style.webkitAnimationPlayState = "running";
+
+
+-webkit-transform-origin:0% 100%; 
+	transform-origin:0% 100%; 
+
+
+
+
+
+-ms-transform: rotate(0deg); /* IE 9 */
+    -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+    transform: rotate(0deg);
+
+
+
+-ms-transform: scale(1,1); /* IE 9 */
+    -webkit-transform: scale(1,1); /* Chrome, Safari, Opera */
+    transform: scale(1,1);
+1
+
+
+
+,ease:Back.easeOut,transformOrigin:"left bottom"
+
+
+
+@media (max-width: 767px) {
+  #logo{
+	position:absolute;
+	left:-1260px;
+	right:0;
+	margin:auto;
+	top:0;
+	width:141px;
+	height:57px;
+}
+}
+
+
+
+#animate{
+	width:325px;
+	height:180px;
+	background-color:#000;
+	transform-origin:bottom;
+	transform:skewX(-15deg);
+	position:absolute;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	margin:auto;
+	overflow:hidden;
+}
+#animate>img{
+	width:100%;
+	height:100%;
+	transform:skewX(15deg);
+}
+
+
+/*placeholder 文字變色*/
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #b9b9b9;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: #b9b9b9;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: #b9b9b9;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: #b9b9b9;
+}
+
+
+
+select換箭頭
+
+
+select {
+  /*Chrome和Firefox里面的?框是不一?的，所以复?了一下*/
+  
+
+  /*很??：?默?的select??框?式清除*/
+  appearance:none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+
+  /*在??框的最右?中??示小箭??片*/
+  background: url("images/arrow.png") no-repeat scroll right center transparent;
+
+
+  /*?下拉小箭?留出一?位置，避免被文字覆?*/
+  padding-right: 14px;
+}
+
+
+/*清除ie的默???框?式清除，?藏下拉箭?*/
+select::-ms-expand { display: none; }
+
+
+
+
+
+
+rwd
+
+
+@media (max-width: 1400px) {
+	#inside{
+	  width:100%;
+	}
+}
+/*rwd1400end*/
+
+/*rwd1400*/@media (max-width: 640px) {
+}

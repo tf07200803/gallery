@@ -1,0 +1,18 @@
+
+
+
+.keyimg{
+	-webkit-font-smoothing:antialiased;
+}
+
+
+TweenLite.set($(".keyimg"), {perspective:800});
+TweenLite.set($(".card"), {transformStyle:"preserve-3d"});
+TweenLite.set($("#phone"), {rotationY:30});
+TweenLite.to($("#phone"),1,{rotationY:-60})
+TweenLite.to($("#phone"),1,{rotationY:60,delay:1})
+TweenLite.to($("#phone"),1,{rotationY:-60,delay:2})
+TweenLite.to($("#phone"),1,{rotationY:60,delay:3})
+
+
+<div class="keyimg inline wid100"><div class="card"><img src="images/phone.png" id="phone" /></div></div>

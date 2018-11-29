@@ -1,0 +1,106 @@
+function fbShare(){
+	FB.ui({
+		method: 'feed',
+  link: 'http://www.lorealparistw.com/2017Infallible24H/',
+  caption: 'An example caption',
+  icture:'http://www.lorealparistw.com/2017Infallible24H/fb.jpg',
+  hashtag: '#對於粉底液永不妥協',
+  description:'L‘Oreal獨家親膚科技，打破水潤度與遮瑕之間的反比定律，在細緻粉體完美遮瑕的情況下，一整天依然保濕又滋潤！力邀知名youtuber黃大謙、女神夏語心與女星常立琳進行實測挑戰，到底在這些殘酷的實境挑戰中，底妝是否依然能完美無瑕呢？關鍵字：loreal、粉底液、底妝、遮瑕、專櫃級、巴黎萊雅',
+  redirect_uri:'http://www.lorealparistw.com/2017Infallible24H/'
+   // method: 'feed',
+	//link: 'http://www.lorealparistw.com/2017Infallible24H/',
+	//p
+	//caption: 'L‘Oreal Paris│對於粉底液 永不妥協  !',
+	//
+	//
+  }, function(response){});
+}
+
+function shareFacebook() {
+
+	var fb_share_url = 'http://www.lorealparistw.com/2017Infallible24H/';
+  var fb_post_return_url = 'http://www.lorealparistw.com/2017Infallible24H/';
+  var title = 'L‘Oreal Paris│對於粉底液 永不妥協!';
+  var desc = 'L‘Oreal獨家親膚科技，打破水潤度與遮瑕之間的反比定律，在細緻粉體完美遮瑕的情況下，一整天依然保濕又滋潤！力邀知名youtuber黃大謙、女神夏語心與女星常立琳進行實測挑戰，到底在這些殘酷的實境挑戰中，底妝是否依然能完美無瑕呢？關鍵字：loreal、粉底液、底妝、遮瑕、專櫃級、巴黎萊雅';
+  var caption = 'L‘Oreal Paris│對於粉底液 永不妥協!';
+  var hashtag='#對於粉底液永不妥協';
+  var facebook_app_id='1109086292556473';
+  pic = 'http://www.lorealparistw.com/2017Infallible24H/fb.jpg';
+  var share_url = 'https://m.facebook.com/dialog/feed?title='+encodeURIComponent(title)+'&hashtag='+encodeURIComponent(hashtag)+'&description='+encodeURIComponent(desc)+'&picture='+encodeURIComponent(pic)+'&app_id='+facebook_app_id+'&caption='+encodeURIComponent(caption)+'&link='+encodeURIComponent(fb_share_url)+'&redirect_uri='+encodeURIComponent(fb_post_return_url);
+  location.href=share_url;
+
+	
+}
+
+function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+      testAPI();
+    } else {
+      // The person is not logged into your app or we are unable to tell.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this app.';
+    }
+  }
+
+  // This function is called when someone finishes with the Login
+  // Button.  See the onlogin handler attached to it in the sample
+  // code below.
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '1109086292556473',
+    cookie     : true,  // enable cookies to allow the server to access 
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.8' // use graph api version 2.8
+  });
+
+  // Now that we've initialized the JavaScript SDK, we call 
+  // FB.getLoginStatus().  This function gets the state of the
+  // person visiting this page and can return one of three states to
+  // the callback you provide.  They can be:
+  //
+  // 1. Logged into your app ('connected')
+  // 2. Logged into Facebook, but not your app ('not_authorized')
+  // 3. Not logged into Facebook and can't tell if they are logged into
+  //    your app or not.
+  //
+  // These three cases are handled in the callback function.
+
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      console.log('Successful login for: ' + response.name);
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + '!';
+    });
+  }

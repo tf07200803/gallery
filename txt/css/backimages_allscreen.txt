@@ -1,0 +1,11 @@
+html,body{
+	width:100%;
+	height:100%;
+}
+body{
+	background: url(images/0310001.jpg) no-repeat center top fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}

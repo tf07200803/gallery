@@ -1,0 +1,136 @@
+
+
+
+
+
+function getByteLen(val) { 
+var len = 0; 
+for (var i = 0; i < val.length; i++) { 
+if (val[i].match(/[^\x00-\xff]/ig) != null) //全形 
+len += 2; 
+else 
+len += 1; 
+} 
+return len; 
+} 
+//返回val在規定位元組長度max內的值 
+function getByteVal(val, max) { 
+var returnValue = ''; 
+var byteValLen = 0; 
+for (var i = 0; i < val.length; i++) { 
+if (val[i].match(/[^\x00-\xff]/ig) != null) 
+byteValLen += 2; 
+else 
+byteValLen += 1; 
+if (byteValLen > max) 
+break; 
+returnValue += val[i]; 
+} 
+return returnValue; 
+}
+
+
+
+
+
+
+
+
+_val = obj.array[i].title;
+		_cur = getByteLen(_val); 
+		_max=40
+		
+		if (_cur == 0) {//當默認值長度為0時,可輸入數為默認maxlength值 
+		
+		} else if (_cur < _max) {//當默認值小於限制數時,可輸入數為max-cur 
+		
+		} else {//當默認值大於等於限制數時 
+		
+		$txt.find(".addCase_Title").html(getByteVal(_val,_max)); //截取指定位元組長度內的值 
+		} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+or
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function getByteLen(val) { 
+var len = 0; 
+for (var i = 0; i < val.length; i++) { 
+if (val[i].match(/[^\x00-\xff]/ig) != null) //全形 
+len += 2; 
+else 
+len += 1; 
+} 
+return len; 
+} 
+//返回val在規定位元組長度max內的值 
+function getByteVal(val, max) { 
+var returnValue = ''; 
+var byteValLen = 0; 
+for (var i = 0; i < val.length; i++) { 
+if (val[i].match(/[^\x00-\xff]/ig) != null) 
+byteValLen += 2; 
+else 
+byteValLen += 1; 
+if (byteValLen > max) 
+break; 
+returnValue += val[i]; 
+} 
+return returnValue; 
+}
+
+
+function setMaxWord($div,_max){
+	_val = $div.html()
+	
+	_cur = getByteLen(_val); 
+	_max=_max
+	
+	if (_cur == 0) {//當默認值長度為0時,可輸入數為默認maxlength值 
+		
+		} else if (_cur < _max) {//當默認值小於限制數時,可輸入數為max-cur 
+		$div.html(getByteVal(_val,_max))
+		} else {//當默認值大於等於限制數時 
+		
+		$div.html(getByteVal(_val,_max)+"..."); //截取指定位元組長度內的值 
+		} 
+}
+
+
+
+
+
+$txt.find(".addCase_Title").html(obj.array[i].title)
+		setMaxWord($txt.find(".addCase_Title"),55)

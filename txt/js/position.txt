@@ -1,0 +1,11 @@
+jQuery(document).mousemove(function(event) {
+mx=event.pageX;
+my=event.pageY;
+
+var position = $('#menulist2_ul').offset();  
+var x = position.left;  
+var y = position.top; 
+
+var position2 = $('#menulist3_ul').offset();  
+var x2 = position2.left;  
+var y2 = position2.top; 

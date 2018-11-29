@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script>
+
+$().ready(function(){
+	
+	var speed=0
+	var myTimer;
+	var menu_leg=5
+	var menuLeg=$("#menu_ul li").length
+	var menuLIarray=new Array()
+	var txtArray=new Array("1","2","3","4","5","6","7","8","9","10")
+	function init(){
+		windowResize()
+		setMenu()
+		creatTXT()
+	}
+	
+	function creatTXT(){
+		var $ul=$("<ul></ul>")
+		var leg=txtArray.length
+		for(i=0;i<leg;i++){
+			var $li=$("<li>創建LI"+i+"</li>")
+			$ul.append($li)
+			$li.css("position","absolute").css("left",i*50+"px")
+		}
+		$("#setTXT").append($ul)
+	}
+	
+	function setMenu(){
+		
+		for(i=0;i<menuLeg;i++){
+			var $li=$("#menu_ul li:eq("+i+")")
+			$li.css("left",i*100+"px").data("test",{x:"yayaya"+i,y:200,z:300})
+			menuLIarray.push($li)
+		}
+		changeColor()
+	}
+	
+	function changeColor(){
+		var $li=$("#menu").find("li")
+		$li.css("color","#0C6")
+		$li.each(function(i) {
+           var $this=$(this).css("top",i*10+"px")
+        });
+	   
+	}
+	
+	function showMenuOldX(){
+		for(i=0;i<menuLeg;i++){
+			//alert(menuLIarray[i].data("test").x)
+		}
+	}
+	
+	$(window).bind("resize",windowResize)
+	function windowResize(){
+		txt.value="寬:"+$(window).width()+"高:"+$(window).height()
+	}
+	
+	$('#scroll_btn').click(function(){
+		// 讓捲軸用動畫的方式移動到 0 的位置
+		// 感謝網友 sam 修正 Opera 問題
+		var $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
+		TweenLite.to($body,1,{scrollTop:y}) 
+		$body.animate({
+			scrollTop: 0
+		}, 3000);
+		window.clearInterval(myTimer)
+		showMenuOldX()
+		return false;
+	});
+	
+	setTimeout(function(){
+        //alert("yayayay")
+    }, 3000);
+	
+	myTimer=window.setInterval(show,1000);
+	function show(){
+		speed+=1
+		txt2.value=speed
+		//alert("yayaya")
+		
+	}
+	init()
+	
+})
+
+
+</script>
+<style type="text/css">
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+#txt{
+	position:fixed;
+}
+#txt2{
+	position:fixed;
+	margin-top:30px;
+}
+#scrollHeightSetDiv{
+	width:100px;
+	height:2000px;
+	border:#CCC 1px dashed;
+	position:absolute;
+}
+#scroll_btn{
+	position:fixed;
+	margin-top:60px;
+}
+#container{
+	position:absolute;
+	margin-left:300px;
+}
+#menu{
+	position:absolute;
+}
+ul{
+	margin:0;
+	padding:0;
+	list-style-type: none;
+}
+#menu_ul li{
+	position:absolute;
+}
+#setTXT{
+	width:500px;
+	height:500px;
+	position:absolute;
+	top:50px;
+}
+</style>
+</head>
+
+<body>
+<input type="text" id="txt" />
+<input type="text" id="txt2" />
+<input type="button" value="捲軸控制回最上面定取消setInterVal" id="scroll_btn" />
+<div id="scrollHeightSetDiv"></div>
+<div id="container">
+	<div id="menu">
+    	<ul id="menu_ul">
+        	<li>menu1</li>
+            <li>menu2</li>
+            <li>menu3</li>
+            <li>menu4</li>
+            <li>menu5</li>
+        </ul>
+    </div>
+    
+    <div id="setTXT">
+    	
+    </div>
+</div>
+</body>
+</html>

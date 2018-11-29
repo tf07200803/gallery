@@ -1,0 +1,43 @@
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=2.0; user-scalable=1;">
+
+
+var checkOrientation = function(){   
+		
+			mode = Math.abs(window.orientation) == 90 ? 'landscape' : 'portrait';   
+		
+			// 在 Android 上使用 Opera Mobile 測試, 發現要另外這樣判斷   
+			/*if ( $.browser.opera )   
+			{   
+				width = screen.width;   
+				height = screen.height;   
+				mode = width > height ? "landscape" : "portrait";   
+			} */  
+		
+			// 本例為希望在使用者用橫向瀏覽時，就秀出遮罩或警示訊息   
+			if (mode == 'portrait')   
+			{   
+			   // 警語遮罩 顯示   
+			  $("#wrongScreen").css("display","none")
+			} else {   
+			   // 警語遮罩 關閉   
+			   $("#wrongScreen").css("display","block")
+			}   
+	};   
+    
+window.addEventListener("resize", checkOrientation, false);   
+window.addEventListener("orientationchange", checkOrientation, false);   
+setInterval(checkOrientation, 500);
+
+
+
+@media (max-width: 767px) {
+	body{
+    	-webkit-text-size-adjust: none;
+  	}
+	
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+	
+   
+}

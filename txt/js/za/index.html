@@ -1,0 +1,440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>卷軸 進化版</title>
+<script src="src/minified/TweenMax.min.js"></script>
+<script src="src/minified/plugins/CSSPlugin.min.js"></script>
+<script src="src/minified/easing/EasePack.min.js"></script>
+<script src="src/minified/TweenLite.min.js"></script>
+<script src="src/jquery-1.11.0.min.js"></script>
+<script src="checkInput.js"></script>
+<script>
+
+var mcArray=new Array()
+var w
+var h
+var dis
+var barY
+var tween1=new TimelineLite();
+var cutpositiontrueArray=new Array()
+var tweenArray=new Array(tween1)
+var autoArray=new Array()
+var controlArray=new Array()
+var screenArray=new Array()
+var screenTargetDistance
+
+var obj1 = {myProp:0};//全手動漸移
+DisX=500//全手動漸移距離
+
+$().ready(function(){
+	
+	
+	$(window).load(function(){
+		/*createAnimate()
+		windowResize()
+		createCutMove()
+		
+		createScrollListener()*/
+		windowResize()
+		createScrollAnimate()
+		windowResize()
+		createScrollListener()
+		screenEventCC=window.setInterval(screenEvent,10);//如果有全手動互動的話
+	})
+	
+	
+	$(window).bind("resize",windowResize)
+	
+
+	
+})
+
+function createScrollAnimate(){
+	/*自動*/
+	var $li=$(".animate-auto")
+	var leg=($li.length)
+	$li.each(function(i) {
+        autoArray.push({mc:$(this)})
+		$(this).attr("am","false")
+		$(this).attr("bm","false")
+    });
+	
+	
+	
+	/*半手動*/
+	var $li=$(".animate-control")
+	var leg=($li.length)
+	$li.each(function(i) {
+		var _tween
+		if($(this).attr("id")=="s1"){
+			_tween=TweenLite.from($(this),1,{marginLeft:500,alpha:0})
+		}
+		if($(this).attr("id")=="s2"){
+			_tween=TweenLite.from($(this),1,{marginLeft:500})
+		}
+		if($(this).attr("id")=="s3"){
+			_tween=TweenLite.from($(this),1,{marginLeft:500})
+		}
+		if($(this).attr("id")=="s4"){
+			_tween=TweenLite.from($(this),1,{marginLeft:500})
+		}
+		if($(this).attr("id")=="s5"){
+			_tween = new TimelineLite();
+			for(i=0;i<5;i++){
+				var $li=$(this).find("li:eq("+i+")")
+				_tween.append(TweenMax.fromTo($li, 1, {marginTop:200,alpha:0,ease: Power2.easeInOut}, {marginTop:0,alpha:1,ease: Power2.easeInOut} ),"-=.5");
+				
+			}
+		}
+		_tween.pause();
+        controlArray.push({mc:$(this),tween:_tween})
+		$(this).attr("am","false")
+		$(this).attr("bm","false")
+    });
+	
+	
+	
+	/*全手動*/
+	var $li=$(".animate-screen")
+	var leg=($li.length)
+	$li.each(function(i) {
+		
+
+		var _tween
+		if($(this).attr("id")=="t1"){
+			_tween=TweenLite.from($(this),1,{marginLeft:500})
+		}
+		if($(this).attr("id")=="t2"){
+			_tween=TweenLite.from($(this),1,{marginLeft:500})
+		}
+		if($(this).attr("id")=="t3"){
+			_tween=TweenLite.from($(this),1,{marginLeft:500})
+		}
+		if($(this).attr("id")=="t4"){
+			var _tween = new TimelineLite();
+			_tween.append(TweenMax.fromTo(obj1, 1, {myProp:DisX,ease: Power0.easeNone}, {myProp:0,ease: Power0.easeNone} ));
+		}
+		_tween.pause();
+		screenArray.push({mc:$(this),tween:_tween})
+		$(this).attr("am","false")
+		$(this).attr("bm","false")
+    });
+	
+}
+
+
+
+function windowResize(){
+	w=$(window).width()
+	h=$(window).height()
+	screenTargetDistance=h*0.2
+}
+
+
+
+
+function createScrollListener(){
+	$(window).scroll(function(){
+		barY=$(window).scrollTop()
+		dis=barY+h
+		for(i=0;i<autoArray.length;i++){
+			var $mc=autoArray[i].mc
+			var position = autoArray[i].mc.offset();  
+			var x = position.left;  
+			var y = position.top;
+			
+			if(dis<y+screenTargetDistance){
+				autoArray[i].mc.attr("am","false")
+			}else if(dis>y+screenTargetDistance){
+				autoArray[i].mc.attr("am","true")
+				
+			}
+			if(dis<y){
+				TweenLite.set(autoArray[i].mc,{alpha:0})
+			}
+		}
+		for(i=0;i<controlArray.length;i++){
+			var $mc=controlArray[i].mc
+			var position = controlArray[i].mc.offset();  
+			var x = position.left;  
+			var y = position.top;
+			if(dis<y+screenTargetDistance){
+				controlArray[i].mc.attr("am","false")
+			}else if(dis>y+screenTargetDistance){
+				controlArray[i].mc.attr("am","true")
+				
+			}
+			
+		}
+		for(i=0;i<screenArray.length;i++){
+			var $mc=screenArray[i].mc
+			var position = screenArray[i].mc.offset();  
+			var x = position.left;  
+			var y = position.top;
+			var mch=$mc.height()
+			screenArray[i].mc.attr("tarY",y)
+			screenArray[i].mc.attr("mch",mch)
+			if(dis>y && dis<y+h+mch){
+				screenArray[i].mc.attr("am","true")
+				if(screenArray[i].mc.attr("id")=="t4"){
+					TweenLite.to($("#t4"),.5,{marginLeft:obj1.myProp})
+				}
+			}else{
+				screenArray[i].mc.attr("am","false")
+			}
+			
+		}
+		
+		checkAuto()
+		checkControl()
+		
+	})
+}
+
+function checkAuto(){
+	for(i=0;i<autoArray.length;i++){
+		if(autoArray[i].mc.attr("am")!=autoArray[i].mc.attr("bm")){
+			if(autoArray[i].mc.attr("am")=="true"){
+				autoArray[i].mc.attr("bm","true")
+				TweenLite.to(autoArray[i].mc,1,{alpha:1,delay:Math.random()*.5})
+			}else{
+				autoArray[i].mc.attr("bm","false")
+				TweenLite.to(autoArray[i].mc,.5,{alpha:0,delay:Math.random()*.5})
+				
+			}
+		}
+	}
+}
+function checkControl(){
+	//controlArray
+	for(i=0;i<controlArray.length;i++){
+
+		if(controlArray[i].mc.attr("am")!=controlArray[i].mc.attr("bm")){
+			if(controlArray[i].mc.attr("am")=="true"){
+				controlArray[i].mc.attr("bm","true")
+				controlArray[i].tween.play()
+			}else{
+				controlArray[i].mc.attr("bm","false")
+				controlArray[i].tween.reverse()
+				
+			}
+		}
+	}
+}
+function checkScreen(){
+	//controlArray
+	for(i=0;i<screenArray.length;i++){
+		
+		if(screenArray[i].mc.attr("am")=="true"){
+			
+			screenArray[i].mc.attr("bm","true")
+			var targetY=parseInt(screenArray[i].mc.attr("tarY"))
+			var mch=parseInt(screenArray[i].mc.attr("mch"))
+			
+			var getNum=Math.abs((targetY-(barY+h)))-(h+mch)
+			
+			var totalNum=getNum/(h+mch)*1
+			screenArray[i].tween.seek(totalNum)
+			
+		}else{
+			screenArray[i].mc.attr("bm","false")
+			
+		}
+	}
+	
+	
+}
+
+function screenEvent(){
+	checkScreen()
+}
+	
+
+
+
+</script>
+
+<style type="text/css">
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+html,body{
+	width:100%;
+	height:100%;
+}
+ul{
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+#container{
+	width:100%;
+	height:100%;
+}
+#inside{
+	width:100%;
+	height:100%;
+}
+#index{
+	background: url(images/bg2.jpg) no-repeat center top fixed; 
+  	-webkit-background-size: cover;
+  	-moz-background-size: cover;
+  	-o-background-size: cover;
+  	background-size: cover;
+ 	 width:100%;
+  	height:100%;
+  	float:left;
+}
+
+#product{
+	width:100%;
+	float:left;
+}
+#product>ul>li{
+	margin:25px;
+}
+.redius{
+	float:left;
+	width:150px;
+	height:150px;
+	background: no-repeat center center; 
+  	-webkit-background-size: cover;
+  	-moz-background-size: cover;
+  	-o-background-size: cover;
+  	background-size: cover;
+	border-radius:75px;
+}
+#story{
+	width:100%;
+	height:100%;
+	float:left;
+	position:relative;
+	overflow:hidden;
+	border-top:1px solid #999;
+}
+#about{
+	width:100%;
+	height:100%;
+	float:left;
+	position:relative;
+	overflow:hidden;
+	border-top:1px solid #999;
+}
+#end{
+	width:100%;
+	height:100%;
+	float:left;
+	position:relative;
+	overflow:hidden;
+	border-top:1px solid #999;
+}
+#s5>ul>li{
+	width:50px;
+	height:50px;
+	background-color:#09F;
+	float:left;
+	border-radius:25px;
+}
+
+</style>
+
+</head>
+
+<body>
+<div id="container">
+
+
+	<!--inside--><div id="inside">
+    
+    	
+        <div id="index"></div>
+       	
+        <div id="product">
+        
+        	<ul>
+            
+            	<li style="background-image:url(images/0.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/1.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/2.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/3.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/4.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/5.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/6.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/7.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/8.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/9.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/10.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/11.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/12.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/13.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/0.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/1.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/2.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/3.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/4.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/5.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/6.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/7.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/8.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/9.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/10.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/11.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/12.jpg)" class="animate-auto redius"></li>
+                <li style="background-image:url(images/13.jpg)" class="animate-auto redius"></li>
+            </ul>
+        
+        </div>
+        
+        <div id="story">
+        
+        	<div style="background-image:url(images/0.jpg); position:absolute; left:25px; top:25px;" class="animate-control redius" id="s1"></div>
+            <div style="background-image:url(images/1.jpg); position:absolute; left:25px; top:225px;" class="animate-control redius" id="s2"></div>
+            <div style="background-image:url(images/2.jpg); position:absolute; left:25px; top:425px;" class="animate-control redius" id="s3"></div>
+            <div style="background-image:url(images/3.jpg); position:absolute; left:25px; top:625px;" class="animate-control redius" id="s4"></div>
+            <div style="background-image:url(images/4.jpg); position:absolute; left:25px; top:825px;" class="animate-control redius" id="s5">
+            	<ul>
+                	<li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            
+            </div>
+        
+        </div>
+        
+        
+        <div id="about">
+        
+        	<div style="background-image:url(images/5.jpg); position:absolute; left:25px; top:25px;" class="animate-screen redius" id="t1"></div>
+            <div style="background-image:url(images/6.jpg); position:absolute; left:25px; top:225px;" class="animate-screen redius" id="t2"></div>
+            <div style="background-image:url(images/7.jpg); position:absolute; left:25px; top:425px;" class="animate-screen redius" id="t3"></div>
+            <div style="background-image:url(images/8.jpg); position:absolute; left:25px; top:625px;" class="animate-screen redius" id="t4"></div>
+            
+        
+        </div>
+       
+      	<div id="end"></div>
+        
+    </div><!--inside-->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+
+</body>
+</html>

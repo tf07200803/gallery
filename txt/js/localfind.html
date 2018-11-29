@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script>
+$().ready(function(){
+	
+var data = $.getUrlParam(window.location.href);  
+alert("URL:"+window.location.href);  
+alert("ID:"+data.id);  
+alert("NAME:"+data.name);
+})
+</script>
+<script>  
+/** 
+     * 解析URL中的参数 
+     * @param {url路径} string 
+     * @returns {返回object<key,value>}  
+     */  
+    $.getUrlParam = function(string) {  
+        var obj = new Object();  
+        if (string.indexOf("?") != -1) {  
+            var string = string.substr(string.indexOf("?") + 1);  
+            var strs = string.split("&");  
+            for (var i = 0; i < strs.length; i++) {  
+                var tempArr = strs[i].split("=");  
+                obj[tempArr[0]] = tempArr[1];  
+            }  
+        }  
+        return obj;  
+    }  
+</script>  
+</head>
+
+<body>
+</body>
+</html>

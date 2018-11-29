@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+<script src="src/minified/TweenMax.min.js"></script>
+<script src="src/minified/plugins/CSSPlugin.min.js"></script>
+<script src="src/minified/easing/EasePack.min.js"></script>
+<script src="src/minified/TweenLite.min.js"></script>
+<script src="src/jquery-1.11.0.min.js"></script>
+<script src="js/jquery.form.js"></script>
+
+<script>
+
+$().ready(function(){
+
+})
+
+
+
+</script>
+</head>
+
+<body>
+
+<form action="upload.php" method="post" id="ajaxForm">
+<div id="selectDiv"><input type="text" class="textClass2" id="photoUrl" disabled="disabled" /><div id="sendbtn"><div class="posiR wid100 hei100"><input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+        <input type="file" name="myfile" id="imageInput" size="50" onchange="loadImageFile();"><input type="hidden" name="picurl" id="picurl"></div></div></div>
+<button id="go_ajs" type="button">上傳</button>  
+
+</form>  
+
+
+圖片：   
+<br>  
+<div id="imagePreview"></div> 
+<script>  
+ $("#go_ajs").click(ajs_upload);   
+// 直接 change 就上傳   
+//$("#pic").change(ajs_upload);   
+  
+function ajs_upload(){   
+  $("#ajaxForm").ajaxSubmit(   
+  {   
+  beforeSubmit: function(){},   
+  success: function(resp,st,xhr,$form) {   
+     if(resp!="err") {   
+       $("#uploadImg").attr("src",resp); 
+	 
+     }   
+  }   
+  });   
+}  
+</script>
+
+
+<script type="text/javascript"> 
+var loadImageFile = (function () { 
+if (window.FileReader) { 
+var oPreviewImg = null, oFReader = new window.FileReader(), 
+rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i; 
+
+oFReader.onload = function (oFREvent) { 
+if (!oPreviewImg) { 
+var newPreview = document.getElementById("imagePreview"); 
+oPreviewImg = new Image(); 
+
+newPreview.appendChild(oPreviewImg); 
+} 
+oPreviewImg.src = oFREvent.target.result; 
+}; 
+
+return function () { 
+var aFiles = document.getElementById("imageInput").files; 
+console.log(aFiles)
+$("#photoUrl").val(aFiles[0].name)
+var date=new Date()
+var filename = aFiles[0].name;
+ 
+var extIndex = filename.lastIndexOf('.');
+var ext
+
+if (extIndex != -1) 
+{
+   var name = filename.substr(0, extIndex);                     //檔名不含副檔名
+ 
+   ext= filename.substr(extIndex+1, filename.length);  //副檔名
+}
+
+
+//console.log(date.getYear()+"_"+date.getDay()+"_"+date.getHours()+"_"+date.getMinutes()+"_"+date.getSeconds()+"_"+date.getMilliseconds()+"_"+aFiles[0].name)
+$("#picurl").val(date.getYear()+"_"+date.getDay()+"_"+date.getHours()+"_"+date.getMinutes()+"_"+date.getSeconds()+"_"+date.getMilliseconds()+"_"+Math.floor(Math.random()*10000000)+"."+ext)
+if (aFiles.length === 0) { return; } 
+if (!rFilter.test(aFiles[0].type)) { alert("You must select a valid image file!"); return; } 
+oFReader.readAsDataURL(aFiles[0]); 
+} 
+
+} 
+if (navigator.appName === "Microsoft Internet Explorer") { 
+return function () { 
+alert(document.getElementById("imageInput").value); 
+document.getElementById("imagePreview").filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = document.getElementById("imageInput").value; 
+
+} 
+} 
+})(); 
+</script>
+<img src="" id="uploadImg" alt=""  />  
+</body>
+</html>

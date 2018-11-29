@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="addr.js"></script>
+<script>
+function citySelectChang() {
+	
+	var city = document.getElementById('ad1');
+	var town = document.getElementById('ad2');
+	update_zip(city.options[city.options.selectedIndex].value, town);
+}
+
+
+</script>
+<title>無標題文件</title>
+</head>
+
+<body>
+<select name="select" id="ad1" class="selectStyle" onchange="citySelectChang();">
+       <option selected="selected" value="">選擇縣市</option>
+            <option value="基隆市">基隆市</option>
+            <option value="台北市">台北市</option>
+            <option value="新北市">新北市</option>
+            <option value="桃園縣">桃園縣</option>
+            <option value="新竹市">新竹市</option>
+            <option value="新竹縣">新竹縣</option>
+            <option value="苗栗縣">苗栗縣</option>
+            <option value="台中市">台中市</option>
+            <option value="彰化縣">彰化縣</option>
+            <option value="南投縣">南投縣</option>
+            <option value="雲林縣">雲林縣</option>
+            <option value="嘉義市">嘉義市</option>
+            <option value="嘉義縣">嘉義縣</option>
+            <option value="台南市">台南市</option>
+            <option value="高雄市">高雄市</option>
+            <option value="屏東縣">屏東縣</option>
+            <option value="台東縣">台東縣</option>
+            <option value="花蓮縣">花蓮縣</option>
+            <option value="宜蘭縣">宜蘭縣</option>
+            <option value="澎湖縣">澎湖縣</option>
+            <option value="金門縣">金門縣</option>
+            <option value="連江縣">連江縣</option>
+            <option value="其它地區">其它地區</option>
+         </select>
+      <select name="select" id="ad2" class="selectStyle">
+       <option selected="selected" value="">選擇鄉鎮市區</option>
+         </select>
+</body>
+</html>

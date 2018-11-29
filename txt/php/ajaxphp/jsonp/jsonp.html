@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<script src="src/jquery-1.11.0.min.js"></script>
+<script>
+
+$().ready(function(){
+
+})
+
+function sendClick(){
+	/*$.post("index.php",{func:"getNameAndTime"},
+  function(data){
+    alert(data.name); // John
+    console.log(data.time); //  2pm
+  }, "json");*/
+  
+  
+  
+  
+  /*$.ajax({
+                url: "index.php",
+                type:"POST",
+				data: $('#sentToBack').serialize(),
+                dataType:'json',
+
+                success: function(msg){
+                    alert(msg.name);
+                },
+
+                 error:function(xhr, ajaxOptions, thrownError){ 
+                    alert(xhr.status); 
+                    alert(thrownError); 
+                 }
+            });*/
+			
+			
+	var URLs="http://localhost/ajax/jsonp/jsonp_send.php?callback=?";
+           
+            $.ajax({
+                url: URLs,
+                data: $('#sentToBack').serialize(),
+                type:"GET",
+				crossDomain: true,
+                dataType:'jsonp',
+
+                success: function(msg){
+                    alert("送出成功");
+					for(i=0;i<msg.data.length;i++){
+						document.write(msg.data[i].name+","+msg.data[i].tel+","+msg.data[i].address+","+msg.data[i].email+"<br>");
+					}
+					
+					
+                },
+
+                 error:function(xhr, ajaxOptions, thrownError){ 
+                    alert(xhr.status); 
+                    alert(thrownError); 
+                 }
+            });
+          
+}
+
+
+
+</script>
+
+
+<style type="text/css">
+
+
+</style>
+
+</head>
+
+<body>
+<div id="container">
+
+<form action="" id="sentToBack">
+name: <input type="text" name="name" id="name" value="陳大大" /><br />
+tel: <input type="text" name="tel" id="tel" value="0955076191" /><br />
+address: <input type="text" name="address" id="address" value="北市永吉路180巷30弄1號" /><br />
+email: <input type="text" name="email" id="email" value="tommy@artstudio.com.tw" /><br />
+</form>
+    <input type="submit" id="sendbtn" onclick="sendClick()" />
+</div>
+
+<div id="target"></div>
+</body>
+</html>

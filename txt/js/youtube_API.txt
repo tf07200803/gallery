@@ -1,0 +1,78 @@
+html部分
+
+<div id="vediodiv"><div id="player"></div></div>
+
+JS:
+
+var v1;
+var tag, player;
+var firstScriptTag
+var playerReady = false;
+
+tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+//youtube影片準備好會CALL這方法
+function onYouTubeIframeAPIReady() 
+{
+	//youtube影片編號
+	var numbers = '497xG41Rrzg';
+	player = new YT.Player('player', {
+	height: '1136',
+	width: '640',
+	videoId: numbers,
+	playerVars: 
+	{
+		'autoplay': 0,
+		'controls': 1
+	},
+	events: 
+	{
+		'onReady': onPlayerReady,
+		'onStateChange': onPlayerStateChange
+	}
+        });
+
+}
+function onPlayerReady(event) {// event.target.playVideo();
+}
+function stopVideo() {
+            player.stopVideo();
+        }
+//狀態判斷
+function onPlayerStateChange(event) 
+{
+	//撥完
+	if (event.data == YT.PlayerState.ENDED) 
+	{
+		if(nowvedio!=2){
+		$("#vedio1").hide();
+		$("#v_fbshare_bt").show();
+		$("#v_fbshare_bg").show();
+		}else{
+		 $("#vediodiv").hide();
+		 $("#vedioclose").hide();
+		 $("#play_bt2").show();
+		}
+	}
+	//暫停
+	if (event.data == YT.PlayerState.PAUSED) 
+	{
+		if(nowvedio!=2){
+		$("#v_fbshare_bt").show();
+		$("#v_fbshare_bg").show();
+		}
+	}
+	//撥放中
+	if (event.data == YT.PlayerState.PLAYING) 
+	{
+
+		if(nowvedio!=2){
+		$("#v_fbshare_bt").hide();
+		$("#v_fbshare_bg").hide();
+		}
+	}
+	
+}

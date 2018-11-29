@@ -1,0 +1,1506 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
+
+<title>TOMMY WEB DESIGNER</title>
+<script src="src/minified/plugins/CSSPlugin.min.js"></script>
+<script src="src/minified/easing/EasePack.min.js"></script>
+<script src="src/minified/TweenLite.min.js"></script>
+<script src="src/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="js/greensock/TweenMax.min.js"></script>
+<script src="js/preloadjs-NEXT.combined.js"></script>
+<script src="js/masonry.pkgd.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css.css">
+<script src="js/pixi.min.js"></script>
+<script src="js/isonscreen-master/jquery.isonscreen.js"></script>
+
+<style>
+
+
+
+#mb{
+	position:fixed;
+	left:0;
+	top:0;
+	z-index:150;
+	display:none;
+}
+
+
+  
+
+</style>
+
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WR2TMHH');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+
+<body>
+<script type="text/javascript" src="js/svg/jquery.svg.js"></script>
+<script type="text/javascript" src="js/svg/jquery.svggraph.js"></script>
+<script type="text/javascript" src="js/svg/jquery.svgfilter.js"></script>
+<script type="text/javascript" src="js/svg/jquery.svganim.js"></script>
+<script src="three.js-master/build/three.js"></script>
+<script src="three.js-master/examples/js/Detector.js"></script>
+<script src="three.js-master/examples/js/controls/OrbitControls.js"></script>
+<script src="three.js-master/examples/js/loaders/ColladaLoader.js"></script>
+<script src="three.js"></script>
+
+
+
+<script>
+
+var myArray=new Array()
+var ballNum=14
+var bounce=-1
+var spring=0.05
+var gravity=0.1
+var fly=2
+var friction=0.7
+var springLength=100
+var head
+var heart
+var barY=0
+var oldbarY=0
+var power = {num:0};
+var icancc=true
+var indexcc=false
+var w,h
+var degrees=0
+var redius=800
+
+var degreesy=0
+var rediusy=800
+
+var map = {};
+var preload;
+var loader;
+var manifest;
+var ismobile=false
+var mbx=0
+var mby=0
+var yytest=0
+
+var worker_y = 0;
+var about_y = 0;
+var menuTargetNum=0
+
+var isMobile = {
+    Android: function () {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function () {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function () {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function () {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function () {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function () {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+if (isMobile.any()) {
+   // window.location = 'history_m.html';
+   ismobile=true
+}
+
+$().ready(function(){
+	$('#logo').svg({onLoad: drawIntro});
+	reload();
+	
+	
+})
+
+
+
+function init(){
+	if(ismobile){
+		if(window.DeviceMotionEvent) {
+		  window.addEventListener('devicemotion', function(event) {
+			  
+			  mbx = event.accelerationIncludingGravity.x;
+			  mby = event.accelerationIncludingGravity.y;
+			  
+			  
+		  })
+		}
+	}
+	
+	
+	
+	
+	//TweenMax.to($("#logo"),1,{position:"absolute",top:15,right:15,left:"auto",bottom:"auto",ease: Power4.easeInOut,onComplete:function(){
+		load_mac()
+		aboutInit()
+	//}})
+	$(".flip-card-content").mouseover('hover', function(){
+		$(this).addClass("flip");
+	});
+	$(".flip-card-content").mouseout('hover', function(){
+		$(this).removeClass("flip");
+	});
+	
+	$('.grid').masonry({
+	 itemSelector: '.grid-item',
+	  columnWidth: '.grid-sizer',
+	  percentPosition: true
+	  
+	});
+	
+	//
+	
+}
+
+
+
+
+
+function onWindowResize() {
+	//txt.value="寬:"+$(window).width()+"高:"+$(window).height()
+	w=$(window).width()
+	h=$(window).height()
+  camera.aspect = (window.innerWidth) / (window.innerHeight*0.6);
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight*0.6 );
+  menuResize()
+  var worker = $('#worker').offset();  
+ worker_y = worker.top;
+ var about = $('#me').offset();  
+ about_y = about.top;
+}
+
+
+
+
+
+
+</script>
+
+<div id="logo">
+<!--<img src="images/logo.png" />-->
+</div>
+
+
+<div id="container">
+	<div id="inside">
+    
+    	<!--首頁--><div id="index">
+        	<!--主視覺--><div id="three"></div><!--//主視覺-->
+            <!--首頁文字--><div id="indexText">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+              <tr>
+                <td height="100%" valign="middle">
+                	<div id="indexTextName" class="en_light">TOMMY</div>
+                    <div id="indexWorker_en" class="en_light">Front End Web Designer</div>
+                    <div id="indexbtn">
+                    
+                    	  <a href="javascript:indexClick()" id="indexbtn_ga">  <div class="flip-card-content"><div class="flip-card-side-a">Look at my work</div><div class="flip-card-side-b">Great</div></div></a>
+                    </div>
+                </td>
+              </tr>
+            </table>
+            	
+            </div><!--首頁文字-->
+            
+            
+            
+        </div><!--//首頁-->
+        
+        
+        <!--關於我--><!--<div id="about">
+
+            <div class="pageContent">
+            	<div id="aboutTitle" class="pageTitleClass en_light white">About Me</div>
+                <div id="aboutContent">
+                	<table width="90%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="42%">
+                        	<div id="about_ch" class="ch white">我相信設計應該適合所有人。 您公司的規模，預算或業務無關緊要：偉大的設計將幫助您更好地告訴您的故事。 設計不僅僅是視覺風格：它可以改變您的業務運作方式，以及您的客戶如何看待您。</div>
+                        </td>
+                        <td>
+                        	<div id="myHead"><img src="images/about.jpg" /></div>
+                        </td>
+                        <td width="42%" align="left">
+                        	<div id="about_en" class="white en_light">I believe that design should be available to everyone. It doesn’t matter what your company’s size, budget or business is: great design will help you tell your story better. Design isn’t just about visual style: it can change how your business works, and how your customers see you.</div>
+                        </td>
+                      </tr>
+                    </table>
+                </div>
+            </div>
+            
+           
+        </div>--><!--//關於我-->
+        
+        <div id="worker">
+        
+        	<div class="pageContent">
+            	<div class="pageTitleClass en_light black workTitle">WORK</div>
+                <!--作品內容--><div class="workContent">
+                	<div class="grid">
+                    
+                    	<div class="grid-sizer"></div>
+                    
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c0.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	碧兒泉官方網站<br />
+                                            <a href="https://www.biotherm.com.tw/" target="_blank">https://www.biotherm.com.tw/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">biotherm Official website</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c1.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	薇姿官方網站<br />
+                                            <a href="http://www.vichy.com.tw/index.php" target="_blank">http://www.vichy.com.tw/index.php</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">vichy Official website</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c2.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	海洋拉娜官方網站<br />
+                                            <a href="http://www.cremedelamerstory.com/" target="_blank">http://www.cremedelamerstory.com/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">LaMer Official website</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c3.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	東森新聞官方網站<br />
+                                            <a href="http://news.ebc.net.tw/" target="_blank">http://news.ebc.net.tw/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">EBC Official website</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c4.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	費雪寶寶官方網站<br />
+                                            <a href="https://www.fisherprice.com.tw/" target="_blank">https://www.fisherprice.com.tw/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">fisherprice Official website</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c5.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	雅詩蘭黛 超級粉底<br />
+                                            <a href="http://demo.artstudio.com.tw/15/work/estee/landing.php?start=1" target="_blank">http://demo.artstudio.com.tw/15/work/estee/landing.php?start=1</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">estee lauder</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c6.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	媚比琳-排汗粉餅<br />
+                                            <a href="http://demo.artstudio.com.tw/15/work/mbl/" target="_blank">http://demo.artstudio.com.tw/15/work/mbl/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">Maybelline</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c7.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	戀愛魔鏡 我的小謊顏時代<br />
+                                            <a href="http://demo.artstudio.com.tw/15/work/fa/maj/" target="_blank">http://demo.artstudio.com.tw/15/work/fa/maj/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">MAJOLICA MAJORCA</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c8.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	媚比琳-好氣色CC<br />
+                                            <a href="http://demo.artstudio.com.tw/15/work/mbl_cc/" target="_blank">http://demo.artstudio.com.tw/15/work/mbl_cc/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">Maybelline</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c25.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	Bioré 日本玩美膚值PK<br />
+                                            <a href="http://sp.artstudio.com.tw/biore-2017/" target="_blank">http://sp.artstudio.com.tw/biore-2017/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">Bioré</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c9.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	巴黎萊雅 蔡依林活動<br />
+                                            <a href="http://demo.artstudio.com.tw/15/work/cream/" target="_blank">http://demo.artstudio.com.tw/15/work/cream/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">lorealparis</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c38.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	巴黎卡詩 黃金設計師俱樂部<br />
+                                            <a href="http://demo.artstudio.com.tw/15/crm/" target="_blank">http://demo.artstudio.com.tw/15/crm/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">kérastase</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c10.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	法倈麗 ZA<br />
+                                            <a href="http://demo.artstudio.com.tw/15/work/za/" target="_blank">http://demo.artstudio.com.tw/15/work/za/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">ZA</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c11.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	白透肌因逆轉行動<br />
+                                            <a href="http://demo.artstudio.com.tw/15/work/bevy/" target="_blank">http://demo.artstudio.com.tw/15/work/bevy/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">bevy</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c12.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	植村秀 無油底妝<br />
+                                            <a href="http://demo.artstudio.com.tw/15/0524/" target="_blank">http://demo.artstudio.com.tw/15/0524/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">shu uemura</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c13.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	SISLEY 全能乳液<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/sisley/" target="_blank">http://demo.artstudio.com.tw/15/work/sisley/#/ex</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">SISLEY</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c14.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	TOYOTA Drive+隨行駕駛系統<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/autoparts_drive+/" target="_blank">https://www.toyota.com.tw/event/autoparts_drive+/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">TOYOTA </div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c15.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	ABC好車網<br />
+                                            <a href="https://www.abccar.com.tw/campaign/2017-07-certificate/index.aspx" target="_blank">https://www.abccar.com.tw/campaign/2017-07-certificate/index.aspx</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">ABC</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c16.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	風傳媒<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/wind/" target="_blank">http://demo.artstudio.com.tw/15/work/wind/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">the storm media</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                     <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c17.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	BOSE<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/bose/" target="_blank">http://demo.artstudio.com.tw/15/work/bose/index.html</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">BOSE</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c18.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	HTC ONE<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/21020313_iphone/game.html" target="_blank">http://demo.artstudio.com.tw/15/work/21020313_iphone/game.html</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">HTC ONE</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c19.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	HTC 大型專賣店<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/20120418_htc2/" target="_blank">http://demo.artstudio.com.tw/15/work/HTC2/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">HTC</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c20.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	3M隔熱ㄧ夏 膜力省錢大作戰<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/3Mgame/game.html" target="_blank">http://demo.artstudio.com.tw/15/work/3Mgame/game.html</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">3M</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c26.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	芭比 barbie 說故事比賽<br />
+                                            <a href="https://www.barbiestorytelling.com.tw/" target="_blank">https://www.barbiestorytelling.com.tw/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">barbie</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c21.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	TVBS女人我最大投票活動<br />
+                                            <a href="http://beautyawards.tvbs.com.tw/2017/index.php" target="_blank">http://beautyawards.tvbs.com.tw/2017/index.php</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">TVBS</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c23.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	法國蔻蘿蘭洗髮精<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20160503/" target="_blank">http://demo.artstudio.com.tw/15/20160503/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">KLORANE</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c22.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	men's Bioré<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20160604/" target="_blank">http://demo.artstudio.com.tw/15/20160604/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">Bioré</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c24.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	PHILIPSt抽獎活動<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20151209philips/" target="_blank">http://demo.artstudio.com.tw/15/20151209philips/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">PHILIP</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c27.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	愛之味 DR.GYM<br />
+                                            <a href="http://demo.artstudio.com.tw/15/0529/" target="_blank">http://demo.artstudio.com.tw/15/0529/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">愛之味</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c28.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	宏佳騰<br />
+                                            <a href="http://demo.artstudio.com.tw/15/0512/moto/" target="_blank">http://demo.artstudio.com.tw/15/0512/moto/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">AEON MOTOR</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c29.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	純喫茶-Try it!鬥牛賽<br />
+                                            <a href="http://demo.artstudio.com.tw/15/0428/" target="_blank">http://demo.artstudio.com.tw/15/0428/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">純喫茶</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c30.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	统一绿茶 腳踏車遊戲<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/green/" target="_blank">http://demo.artstudio.com.tw/15/0414/game/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">统一绿茶</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c31.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	雅詩蘭黛 晶透面膜<br />
+                                            <a href="http://demo.artstudio.com.tw/15/0331_ess/" target="_blank">http://demo.artstudio.com.tw/15/0331_ess/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">estee lauder</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c32.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	膳魔師 會員DM<br />
+                                            <a href="http://demo.artstudio.com.tw/15/0311/thermos/" target="_blank">http://demo.artstudio.com.tw/15/0311/thermos/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">THERMOS</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c33.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	湯瑪士小火車 競速挑戰<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/fisher_game/" target="_blank">http://demo.artstudio.com.tw/15/fisher_game/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">THOMAS</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c34.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	kotex靠得住<br />
+                                            <a href="http://demo.artstudio.com.tw/15/kotex/" target="_blank">http://demo.artstudio.com.tw/15/kotex/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">kotex</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c35.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	遠東-賓果讚讚樂<br />
+                                            <a href="http://demo.artstudio.com.tw/15/xmas/" target="_blank">http://demo.artstudio.com.tw/15/xmas/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">遠東</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c36.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	費雪-分享寶寶每一刻<br />
+                                            <a href="http://demo.artstudio.com.tw/15/baby/#/index" target="_blank">http://demo.artstudio.com.tw/15/baby/#/index</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">fisherprice</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c37.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	Bioré 帶你去日本<br />
+                                            <a href="https://sp.artstudio.com.tw/biore_bbf_summer/" target="_blank">https://sp.artstudio.com.tw/biore_bbf_summer/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">Bioré</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c39.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	翰昌動力行銷<br />
+                                            <a href="http://demo.artstudio.com.tw/15/han/index.html" target="_blank">http://demo.artstudio.com.tw/15/han/index.html</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">HAN CHANG</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c40.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	政大 形象短片設計競賽<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171016/" target="_blank">http://demo.artstudio.com.tw/15/20171016/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">International MBA</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c41.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	支持心目中的快轉保養女王/大使<br />
+                                            <a href="https://sp.artstudio.com.tw/biore_homespaw2/" target="_blank">https://sp.artstudio.com.tw/biore_homespaw2/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">Bioré</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c42.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	彩虹小馬 魔法跳舞比賽<br />
+                                            <a href="http://demo.artstudio.com.tw/15/20171115/work/biogame/" target="_blank">http://2017mlpdancecompetition.com.tw/</a>
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">彩虹小馬</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      <!--組--><div class="grid-item grid-item--width2">
+                      	<div class="grid_body">
+                            <div class="grid-img">
+                            	<img src="images/c43.jpg" />
+                                <div class="grid_detail">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+                                      <tr>
+                                        <td height="100%" align="center" valign="middle">
+                                        	全家 FamilyMart 愛舉牌
+                                            
+                                            
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="grid-text">全家 FamilyMart</div>
+                        </div>
+                      </div><!--//組-->
+                      
+                      
+                      
+                    </div>
+                
+                </div><!--//作品內容-->
+            </div>
+            
+            
+            
+        
+        </div>
+        
+        
+         <div id="cooperation">
+        
+        	<div class="pageContent">
+            	<div class="pageTitleClass en_light black workTitle">Cooperation</div>
+                <!--作品內容--><div class="workContent">
+                	
+                    <ul>
+                    
+                    	<li><img src="images/l0.png" /></li>
+                        <li><img src="images/l1.png" /></li>
+                        <li><img src="images/l2.png" /></li>
+                        <li><img src="images/l3.png" /></li>
+                        <li><img src="images/l4.png" /></li>
+                        <li><img src="images/l5.png" /></li>
+                        <li><img src="images/l6.png" /></li>
+                        <li><img src="images/l7.png" /></li>
+                        <li><img src="images/l8.png" /></li>
+                        <li><img src="images/l9.png" /></li>
+                        <li><img src="images/l10.png" /></li>
+                        <li><img src="images/l11.png" /></li>
+                        <li><img src="images/l12.png" /></li>
+                        <li><img src="images/l13.png" /></li>
+                        <li><img src="images/l14.png" /></li>
+                        <li><img src="images/l15.png" /></li>
+                        <li><img src="images/l16.png" /></li>
+                        <li><img src="images/l17.png" /></li>
+                        <li><img src="images/l18.png" /></li>
+                        <li><img src="images/l19.png" /></li>
+                        <li><img src="images/l20.png" /></li>
+                        <li><img src="images/l21.png" /></li>
+                        <li><img src="images/l22.png" /></li>
+                        <li><img src="images/l23.png" /></li>
+                        <li><img src="images/l24.png" /></li>
+                        <li><img src="images/l25.png" /></li>
+                        
+                    </ul>
+                
+                </div><!--//作品內容-->
+            </div>
+            
+            
+            
+        
+        </div>
+        
+        
+        <!--skill--><div id="ican">
+        	
+            <div class="content1000">
+					
+                    <div id="css_table_ican">
+                          <div class="css_tr_ican">
+                              <div class="css_td_ican icanLeft" style="vertical-align:middle;">
+                              	<div id="icanTitle" class="en_light">skill</div>
+                                <div id="icanDetail">
+                                
+                                	網頁製作經歷12年，剛接觸時大家普遍是用flash(AS3)，雖然已經淘汰了但卻奠定了我未來的動態觀念與技術。
+                                	最初踏入職場時，其實並沒有前端工程師這職位，當時幾乎是設計到切板都是自己一手包辦，也做過許多素材不論是動態或靜態或影片，雖然比較辛苦但也讓我更能獨立作業。
+                                    
+                                
+                                </div>
+                              </div>
+                              <div class="css_td_ican icanRight">
+                              	<div id="head"><img src="images/_head.png" style="opacity:0;" /><div id="headContainer"></div></div>
+                              	
+                              
+                              </div>
+                             
+                          </div>
+                          
+                    </div>
+                    
+                                    
+            </div>
+        
+        </div><!--//skill-->
+        
+        
+        <!--about--><div id="me">
+        	
+            <div class="content1000">
+					<div id="metitle" class="en_light">ABOUT</div>
+                    <div id="css_table">
+                          <div class="css_tr">
+                              <div class="css_td abouttxt abouttxt_left">
+                              	<div id="aboutch">
+                                
+                                	利用充足的時間，來想著如何讓自己的作品更加的精緻，程式哪裡寫得不夠好拖慢效能，進而著手去改善加強，最後能驕傲的將努力的心血放入作品集裡，若是過程中能學習並發現，再多的辛苦也是值得的了。
+                                </div>
+                              </div>
+                              <div class="css_td aboutImg" id="first_div">
+                              	<div id="aboutImgOver"><img src="images/about.jpg" /></div>
+                              </div>
+                              <div class="css_td abouttxt abouttxt_right" id="second_div">
+                              	<div id="abouten">Use enough time to think about how to make your work more sophisticated, where the program is not well written slow down efficiency, and then proceed to improve and strengthen, and finally proud to work hard into the album, if the process Can learn and find that more hard work is worth it.</div>
+                              </div>
+                          </div>
+                    </div>
+                    
+                                    
+            </div>
+        
+        </div><!--//about-->
+        
+        <!--download--><div id="download">
+        
+            <div class="content1000">
+            
+            	<div id="downloadBody">
+                
+                	<ul>
+                    
+                    	<li>
+                        	<div class="downtitle csscolor">
+                            	css
+                            </div>
+                            <div class="downContent">
+                            	<ul>
+                                	<li><a href="http://blog.shihshih.com/installing-the-sass-and-compass/" target="_blank">sass</a></li>
+                                	<li><a href="txt/css/backimages_allscreen.txt" target="_blank">背景全螢幕</a></li>
+                                    <li><a href="txt/css/css.css" target="_blank">初始化</a></li>
+                                    <li><a href="txt/css/css_three.txt" target="_blank">3D效果</a></li>
+                                    <li><a href="txt/css/css_all.txt" target="_blank">綜合</a></li>
+                                    <li><a href="txt/css/div_place.html" target="_blank">div交換位置</a></li>
+                                    <li><a href="txt/css/select.txt" target="_blank">select自建樣式</a></li>
+                                    <li><a href="txt/css/checkbox.txt" target="_blank">checkbox自建樣式</a></li>
+                                    <li><a href="txt/css/table.html" target="_blank">CSS建立表格</a></li>
+                                    <li><a href="txt/css/normalize.css" target="_blank">normalize.css</a></li>
+                                    <li><a href="txt/css/reset.css" target="_blank">reset.css</a></li>
+                                    <li><a href="http://bennettfeely.com/clippy/" target="_blank">css遮罩</a></li>
+                                    <li><a href="txt/css/iostext.txt" target="_blank">ios auto fontsize</a></li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                        	<div class="downtitle javacolor">
+                            	javascript
+                            </div>
+                            <div class="downContent">
+                            	<ul>
+                                	<li><a href="https://getbootstrap.com/" target="_blank">bootstrap</a></li>
+                                    <li><a href="https://canvasjs.com/" target="_blank">canvasJS</a></li>
+                                    <li><a href="https://github.com/d3/d3/wiki/Gallery" target="_blank">d3文字雲</a></li>
+                                    <li><a href="http://fabricjs.com/" target="_blank">fabricjs</a></li>
+                                    <li><a href="http://fancybox.net/" target="_blank">fancybox</a></li>
+                                    <li><a href="txt/js/Fancy Buttons MBlog/index.html" target="_blank">Fancy-Buttons-MBlog</a></li>
+                                    <li><a href="txt/js/checkLineorFB/index.html" target="_blank">判斷移動裝置LINE&FB瀏覽器</a></li>
+                                    <li><a href="https://developers.google.com/maps/documentation/javascript/?hl=zh-tw" target="_blank">googleMap</a></li>
+                                    <li><a href="https://greensock.com/get-started-js" target="_blank">greensock</a></li>
+                                    <li><a href="http://gridviewscroll.aspcity.idv.tw/" target="_blank">GridViewScroll</a></li>
+                                    <li><a href="http://iscrolljs.com/#initialization" target="_blank">iScroll</a></li>
+                                    <li><a href="http://jplayer.org/latest/demos/" target="_blank">jplayer音樂套件</a></li>
+                                    <li><a href="https://createjs.com/preloadjs" target="_blank">PreloadJS</a></li>
+                                    <li><a href="https://owlcarousel2.github.io/OwlCarousel2/" target="_blank">OwlCarousel</a></li>
+                                    <li><a href="txt/js/pixastic-master/index.html" target="_blank">pixastic-master</a></li>
+                                    <li><a href="http://www.pixijs.com/" target="_blank">pixi</a></li>
+                                    <li><a href="https://sweetalert.js.org/" target="_blank">sweetalert</a></li>
+                                    <li><a href="txt/js/WipeTouch/index.html" target="_blank">WipeTouch </a></li>
+                                    <li><a href="txt/js/za/index.html" target="_blank">自寫卷軸ZA</a></li>
+                                    <li><a href="http://plugins.krajee.com/file-advanced-usage-demo" target="_blank">bootstrap-fileinput-master</a></li>
+                                    <li><a href="https://blueimp.github.io/jQuery-File-Upload/" target="_blank">jQuery-File-Upload</a></li>
+                                    <li><a href="txt/js/panorama/index.html" target="_blank">手機傾斜與旋轉偵測</a></li>
+                                    <li><a href="txt/js/checkMobileScreen/" target="_blank">手機直式橫式偵測</a></li>
+                                    <li><a href="txt/js/d3-cloud-master/index.html" target="_blank">d3-cloud-master文字雲</a></li>
+                                    <li><a href="txt/js/color-thief-master/index.html" target="_blank">色彩相近套件</a></li>
+                                    <li><a href="txt/js/isonscreen/index.html" target="_blank">isonscreen</a></li>
+                                    <li><a href="txt/js/game1/index.html" target="_blank">刮刮樂</a></li>
+                                    <li><a href="txt/js/wordbyte/" target="_blank">以BYTE限制字數</a></li>
+                                    <li><a href="txt/js/init.html" target="_blank">基本JQ</a></li>
+                                    <li><a href="txt/js/dm/turnjs4/samples/magazine/index.html" target="_blank">翻書特效</a></li>
+                                    <li><a href="txt/js/place/" target="_blank">縣市地區</a></li>
+                                    <li><a href="https://masonry.desandro.com/" target="_blank">masonry</a></li>
+                                    <li><a href="txt/js/ajax_load.txt" target="_blank">ajax load</a></li>
+                                    <li><a href="txt/js/emailinit.txt" target="_blank">js控制欄位初始直</a></li>
+                                    <li><a href="txt/js/event_tracking.js" target="_blank">ga</a></li>
+                                    <li><a href="txt/js/fbVideo.txt" target="_blank">FB鑲入影片</a></li>
+                                    <li><a href="txt/js/FBSHARE.txt" target="_blank">FB分享</a></li>
+                                    <li><a href="txt/js/JSCREATE.txt" target="_blank">js產生css js php</a></li>
+                                    <li><a href="txt/js/youtube_API.txt" target="_blank">youtube_API.txt</a></li>
+                                    <li><a href="txt/js/inArray.txt" target="_blank">array偵測重複</a></li>
+                                    <li><a href="txt/js/button.txt" target="_blank">jquery選擇器</a></li>
+                                    <li><a href="txt/js/position.txt" target="_blank">滑鼠或物件的位置</a></li>
+                                    <li><a href="txt/js/ie.html" target="_blank">判斷瀏覽器</a></li>
+                                    <li><a href="txt/js/localfind.html" target="_blank">網址後的參數</a></li>
+                                    
+                                    
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                        	<div class="downtitle phpcolor">
+                            	other
+                            </div>
+                            <div class="downContent">
+                            	<ul>
+                                	<li><a href="https://chrome.google.com/webstore/detail/tag-assistant-by-google/kejbdjndbnbjgmefkgdddjlbokphdefk?hl=zh-TW" target="_blank">Tag Assistant</a></li>
+                                    <li><a href="https://chrome.google.com/webstore/detail/facebook-pixel-helper/fdgfkebogiimcoedlicjlajpkdmockpc?hl=zh-TW" target="_blank">Facebook Pixel Helper</a></li>
+                                    <li><a href="txt/php/search/" target="_blank">檔案搜尋</a></li>
+                                    <li><a href="txt/php/template/" target="_blank">樣板下載</a></li>
+                                    <li><a href="txt/php/ajaxphp/" target="_blank">ajax</a></li>
+                                    <li><a href="txt/php/normal" target="_blank">normal</a></li>
+                                    <li><a href="txt/php/pdo/" target="_blank">pdo</a></li>
+                                    <li><a href="txt/php/facebook/" target="_blank">facebook api</a></li>
+                                    <li><a href="txt/php/message_send_encode/" target="_blank">簡訊傳送</a></li>
+                                    <li><a href="txt/php/sendMail/" target="_blank">email傳送</a></li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+                    
+                    </ul>
+                
+                </div>
+            
+            
+            </div>
+        
+        </div><!--download-->
+        
+        
+        <!--技能--><!--<div id="skill">
+        	
+            <div class="pageBottom">
+            	<svg viewBox="0 0 200 200" preserveAspectRatio="none" width="100%" height="100%">
+				<polygon points="0,0 201,201 0,201 " style="fill:rgb(255,255,255);"></polygon>
+				</svg>
+            </div>
+            
+            
+        		
+            <div class="pageContent" style="background-color:#fff">
+            	
+                <div id="skillTitle" class="pageTitleClass en_light black">skill</div>
+            	<div id="skillContent">
+                	
+                    <div id="owl" class="owl-carousel owl-theme">
+                    
+                    	<div class="item"><img src="images/v1.jpg" /></div>
+                        <div class="item"><img src="images/v2.jpg" /></div>
+                        <div class="item"><img src="images/v3.jpg" /></div>
+                        <div class="item"><img src="images/v4.jpg" /></div>
+                        <div class="item"><img src="images/v5.jpg" /></div>
+                        <div class="item"><img src="images/v6.jpg" /></div>
+                        <div class="item"><img src="images/v7.jpg" /></div>
+                        <div class="item"><img src="images/v13.jpg" /></div>
+                        <div class="item"><img src="images/v0.jpg" /></div>
+                    	<div class="item"><img src="images/v9.jpg" /></div>
+                        <div class="item"><img src="images/v10.jpg" /></div>
+                        <div class="item"><img src="images/v11.jpg" /></div>
+                        <div class="item"><img src="images/v12.jpg" /></div>
+                        <div class="item"><img src="images/v8.jpg" /></div>
+                    </div>
+                
+                </div>
+            
+            </div>
+            
+            <div class="pageTop">
+            	<svg viewBox="0 0 200 200" preserveAspectRatio="none" width="100%" height="100%" >
+				<polygon points="0,-1 200,200 200,-1 " style="fill:rgb(255,255,255);"></polygon>
+				</svg>
+            </div>
+            
+            
+        </div>--><!--//技能-->
+        
+        
+        <!--menu--><div id="menu">
+        
+        	<!--左--><div id="menuLeft">
+            	<ul>
+                	<li class="target"><a href="javascript:myScroll('index')">index</a></li>
+                    <li><a href="javascript:myScroll('work')">work</a></li>
+                    <li><a href="javascript:myScroll('about')">about</a></li>
+                </ul>
+            </div><!--//左-->
+            
+            <!--右--><div id="menuRight">
+            	<ul>
+                	<li><a href="#"><img src="images/share1.png" /></a></li>
+                </ul>
+            </div><!--右-->
+        
+        </div><!--//menu-->
+        
+    	
+    </div>
+
+
+</div>
+
+
+<input type="text" id="mb" />
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WR2TMHH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+</body>
+</html>

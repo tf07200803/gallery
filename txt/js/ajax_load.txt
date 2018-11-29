@@ -1,0 +1,6 @@
+$("#menushow").load("menu.html", function (response, status, xhr) {
+                if (status == "success") {
+                    menutar=4
+					createmenu()
+                }
+            })
