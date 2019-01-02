@@ -427,7 +427,7 @@ function aboutInit(){
 	//console.log(app)
 	app.renderer.plugins.interaction.autoPreventDefault = false;
 	document.getElementById("headContainer").appendChild(app.view);
-	head = PIXI.Sprite.fromImage('images/_head.png')
+	head = PIXI.Sprite.fromImage('images/shead.png')
 	//head.anchor.set(0.5);
 	head.x = 50;
 	head.y = 200;
@@ -777,7 +777,7 @@ $(document).scroll(function () {
 			"images/logo.png",
 			"images/about.jpg",
 			"images/share1.png",
-			"images/_head.png",
+			"images/shead.png",
 			"Bridge2/negx.jpg",
 			"Bridge2/negy.jpg",
 			"Bridge2/negz.jpg",
