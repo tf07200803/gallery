@@ -1,0 +1,1352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>testViewWeb</title>
+<script src="src/minified/TweenMax.min.js"></script>
+<script src="src/minified/plugins/CSSPlugin.min.js"></script>
+<script src="src/minified/easing/EasePack.min.js"></script>
+<script src="src/minified/TweenLite.min.js"></script>
+<script src="src/jquery-1.11.0.min.js"></script>
+<script src="flip.js"></script>
+<script>
+
+
+var pukuArray=new Array("heart","rhombus","spade","flower")//紅心 方塊 黑桃 黑花
+var moneyArray=new Array(5,10,50,100,500,1000,5000,10000,50000,100000)//籌碼編號
+var pukuleg=15//洗牌數目
+var scoreArray=[0,0,0]//中間區域撒錢投注金額
+var gametime=40//投注時間秒數
+var gamestoptime=5//停止投注秒數
+var wintime=10//派獎秒數
+var gamestarttime=5//發牌秒數
+var gameinit//遊戲循環架構
+var moneynum=10//初始設定籌碼10
+var lotteryArray=[0,0,0]//投注金額 從左到右 龍和虎
+var winArray=[0,0,0]//從左到右 龍虎和 贏
+var animateArray=new Array([],[],[])//派獎動畫裡的籌碼
+var oneanimate=true//動畫若是只播放一次
+var gametype=""
+
+$().ready(function(){
+	
+//翻牌設定
+$(".pokediv").flip({
+        trigger: ""
+      });
+
+//開始倒數
+gameinit=new timeStart()
+gameinit.gameTime(gametime)
+	
+	
+//開啟投注按鈕功能
+lotterybtn()
+	
+
+})
+	
+//洗牌
+function refreshpuku(){
+	closepuku()//關閉翻牌
+	refreshinit()//所有數字投注初始化
+	$left_mc=$(".dtscore_left .pokediv").hide()
+	$right_mc=$(".dtscore_right .pokediv").hide()
+	$pukubody=$(".pukumovemoveBody")
+	$pukubody.html("")
+	
+	for(i=pukuleg;i>0;i--){
+		var $li=$('<div class="puku"></div>');
+		var ran1=Math.floor(Math.random()*13)+1
+		var ran2=Math.floor(Math.random()*4)
+		$li.addClass(pukuArray[ran2]+ran1)
+		$pukubody.append($li)
+		if(i%2){
+			TweenLite.to($li,.5,{x:50,delay:i*0.1+Math.random()*0.3,onCompleteParams:[$li,i],rotation:10,onComplete:refreshpukufinish})
+		}else{
+			TweenLite.to($li,.5,{x:-50,delay:i*0.1+Math.random()*0.3,onCompleteParams:[$li,i],rotation:-10,onComplete:refreshpukufinish})
+		}
+		
+	}
+	
+	
+	function refreshpukufinish(mc,i){
+		TweenLite.to(mc,.5,{x:0,rotation:0,onCompleteParams:[mc],onComplete:deletethis})
+		mc.css("zIndex",i)
+		if(i==pukuleg){
+			$left_mc=$(".dtscore_left .pokediv")
+			$right_mc=$(".dtscore_right .pokediv")
+			$left_mc.css("left",62).css("top",-20).show()
+			$right_mc.css("left",-62).css("top",-20).show()
+			TweenLite.to($left_mc,.5,{"left":0,"top":5,delay:.5})
+			TweenLite.to($right_mc,.5,{"left":0,"top":5,delay:1})
+		}
+	}
+	
+}
+	
+//所有數字投注初始化
+function refreshinit(){
+	$(".dtgamelight").hide()
+	$(".scoreNum").text("")
+	scoreArray=[0,0,0]
+	lotteryArray=[0,0,0]
+	$(".dtgameAreaFooter").text("")
+	$(".dtgameAreaHead").text(0)
+}
+
+//刪除一些動畫後產物
+function deletethis(mc){
+	mc.remove()
+}
+	
+//開牌派獎
+function sharewin(){
+	
+	
+	//隨機龍虎和
+	var puku1num=Math.floor(Math.random()*13)+1
+	var puku1color=Math.floor(Math.random()*4)
+	
+	var puku2num=Math.floor(Math.random()*13)+1
+	var puku2color=Math.floor(Math.random()*4)
+	
+	//$(".scoreNum")
+	$(".dtscore_left .scoreNum").text(puku1num)
+	$(".dtscore_right .scoreNum").text(puku2num)
+	
+	openpuku(pukuArray[puku1color]+puku1num,pukuArray[puku2color]+puku2num)
+	
+	
+	
+	if(puku1num>puku2num){
+		winArray=[1,0,0]
+	}else if(puku2num>puku1num){
+		winArray=[0,0,1]
+	}else{
+		winArray=[0,1,0]
+	}
+	
+	
+	for(i=0;i<animateArray.length;i++){
+		var leg=animateArray[i].length;
+		if(winArray[i]==1){
+			$(".dtgame .dtgameArea:eq("+i+") .dtgamelight").show()
+		}
+		for(j=0;j<animateArray[i].length;j++){
+			
+			if(winArray[i]==1){
+				TweenLite.to(animateArray[i][j],1,{"left":0+Math.random()*100,"top":0+Math.random()*100,delay:5,onCompleteParams:[animateArray[i][j]],onComplete:deletethis})
+			}else{
+				TweenLite.to(animateArray[i][j],1,{"left":600+Math.random()*100,"top":0+Math.random()*100,delay:3,onCompleteParams:[animateArray[i][j]],onComplete:deletethis})
+			}
+			
+		}
+	}
+}
+
+//翻開牌
+function openpuku(str1,str2){
+	
+	
+	$(".dtscore_left .back>div").attr("class","puku "+str1)
+	$(".dtscore_right .back>div").attr("class","puku "+str2)
+	
+	
+	$(".pokediv").flip(true);
+	
+	
+}
+//蓋住牌
+function closepuku(){
+	$(".pokediv").flip(false);
+}
+	
+	
+	
+//撒錢
+function shareMoney(){
+	for(i=0;i<3;i++){
+		$mc=$(".center"+i)
+		var position = $mc.offset();  
+		var x = position.left;  
+		var y = position.top; 
+		for(j=0;j<10;j++){
+			var ran=moneyArray[Math.floor(Math.random()*8)]
+			scoreArray[i]+=ran
+			$li=$('<div class="sharemoney"><img src="images/'+ran+'.png"></div>')
+			ranx=Math.random()*100-15+x-($(window).width()-1120)/2
+			rany=Math.random()*100-15+y
+			$(".sharemoneyDiv").append($li)
+			TweenLite.to($li,.5,{"left":ranx,"top":rany})
+			animateArray[i].push($li)
+		}
+		$(".dah"+i).text(scoreArray[i])
+		
+	}
+	
+}
+
+//籌碼按鈕功能
+function moneyChange(num,mc){
+	moneynum=num
+	$mc=$(mc).parent()
+	$omc=$mc.siblings()
+	$mc.addClass("target")
+	$omc.removeClass("target")
+}
+	
+//投注按鈕功能
+function lotterybtn(){
+	
+	if(gametype=="gameTime"){
+		
+		
+		var $li=$(".dtgame .dtgameArea")
+		$li.each(function(i) {
+			$(this).attr("myid",i)
+			$(this).click(function(){
+				var num= $(this).attr("myid")
+				lotteryArray[num]+=moneynum
+				$(this).find(".dtgameAreaFooter").text(lotteryArray[num])
+			})
+		});
+		
+		
+	}
+	
+}
+	
+//清除投注[取消按鈕]
+function clearmoney(){
+	lotteryArray=[0,0,0]
+	$(".dtgameAreaFooter").text(0)
+}	
+	
+	
+//倒數計時
+function timeStart(num){
+	var engine = {num:0};
+	var timenum
+	var timecontrol
+	this.gameTime=function(num){
+		timenum=num
+		timeCheck("gameTime")
+	}
+	this.gamestop=function(num){
+		timenum=num
+		timeCheck("gamestop")
+	}
+	this.win=function(num){
+		timenum=num
+		timeCheck("win")
+		sharewin()
+	}
+	this.refreshpuku=function(num){
+		timenum=num
+		timeCheck("refreshpuku")
+		refreshpuku()//洗牌
+	}
+	var timeCheck=function(type){
+		timecontrol=TweenLite.to(engine,1,{num:0,onCompleteParams:[type],onComplete:timeCheck})
+		$(".timerun").text(timenum)
+		gametype=type
+		if(type=="gameTime"){
+			$(".timeType").text("投注中...")
+			var ran=Math.floor(Math.random()*10)//每秒有機會以10%機率撒錢
+			if(ran==0){shareMoney()}
+		}
+		if(type=="gamestop"){
+			$(".timeType").text("停止投注...")
+		}
+		if(type=="win"){
+			$(".timeType").text("派奖中...")
+		}
+		if(type=="refreshpuku"){
+			$(".timeType").text("发牌中...")
+		}
+		if(timenum<1 || timenum==0){
+			timecontrol.pause()
+			timecontrol.seek(0)
+			if(type=="gameTime"){
+				gameinit.gamestop(gamestoptime)
+			}
+			if(type=="gamestop"){
+				gameinit.win(wintime)
+			}
+			if(type=="win"){
+				gameinit.refreshpuku(gamestarttime)
+			}
+			if(type=="refreshpuku"){
+				gameinit.gameTime(gametime)
+			}
+			oneanimate=true;
+		}else{
+			timenum--
+			oneanimate=false;
+		}
+		
+	}
+	
+}
+	 
+
+
+</script>
+
+<link href="puku.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+
+	.dtred{
+		color:#FF0004;
+	}
+	.dtgray{
+		color:#333;
+	}
+	ul{
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+	body,html{
+		background-color: #E6E6E6;
+	}
+	a{
+		text-decoration: none;
+	}
+
+#container{
+	width:100%;
+	height:100%;
+	font: 12px 'Microsoft Yahei', 'Microsoft JhengHei', tahoma, Srial, helvetica, sans-serif;
+}
+	.inside{
+		width: 1120px;
+		position: relative;
+		margin: auto;
+		background-color: #fff;
+		padding-bottom: 15px;
+	}
+	.dttitle{
+		width: calc(100% - 30px);
+		height: 157px;
+		display: inline-block;
+		padding: 15px;
+	}
+	.dttitle_left{
+		width: 315px;
+		height: calc(100% - 15px);
+		background-color: #F1F2F7;
+		float: left;
+		margin-right: 10px;
+		padding-top: 15px;
+	}
+	.dttitle_center{
+		width: 250px;
+		height: calc(100% - 25px);
+		background-color: #F1F2F7;
+		float: left;
+		padding-top: 25px;
+		
+	}
+	.dttitle_right{
+		width: 505px;
+		height: calc(100% - 15px);
+		background-color: #F1F2F7;
+		float: right;
+		padding-top: 15px;
+		position: relative;
+	}
+	.dtlogo_text{
+		width: 100%;
+		font-size: 24px;
+		font-weight: bold;
+		text-align: center;
+	}
+	.dtlogo_img{
+		width: 100%;
+		text-align: center;
+	}
+	.dtlogo_img_src{
+		width: 80px;
+		height: 80px;
+		display: inline-block;
+		margin-top: 10px;
+	}
+	.dttitle_data{
+		font-size: 14px;
+		font-weight: bold;
+		text-align: center;
+		width: 100%;
+	}
+	
+	.dttitle_type{
+		width: 100%;
+		margin-top: 30px;
+	}
+	.timerun{
+		width: 60px;
+		height: 60px;
+		border-radius: 60px;
+		background-color: #b76b12;
+		line-height: 60px;
+		color:#fff;
+		font-size: 37px;
+		text-align: center;
+		display: inline-block;
+	}
+	.timeType{
+		font-size: 18px;
+		display: inline-block;
+		margin-left: 5px;
+	}
+	.dtscore{
+		width: 100%;
+		position: relative;
+		height: 110px;
+	}
+	
+	.dtscorebottomline{
+		width: 2px;
+		height: 40px;
+		background-color: #c8c8c8;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+	}
+	
+	
+	
+	.dtscorecontent{
+		width: 125px;
+		display: inline-block;
+	}
+	.scoreNum{
+		font-size: 27px;
+		width: 100%;
+		text-align: center;
+		height: 35px;
+	}
+	.dtscore_left .scoreNum{
+		color:#923030;
+	}
+	.dtscore_right .scoreNum{
+		color:#0D6D9E;
+	}
+	.scorebar{
+		width: 100%;
+		height: 20px;
+		text-align: center;
+		line-height: 20px;
+		color:#fff;
+		font-size: 15px;
+		text-align: center;
+	}
+	.dtscore_left .scorebar{
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#650e17+0,8b212c+50,650e17+100 */
+background: #650e17; /* Old browsers */
+background: -moz-linear-gradient(top, #650e17 0%, #8b212c 50%, #650e17 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #650e17 0%,#8b212c 50%,#650e17 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #650e17 0%,#8b212c 50%,#650e17 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#650e17', endColorstr='#650e17',GradientType=0 ); /* IE6-9 */
+	}
+	.dtscore_right .scorebar{
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#010952+0,0a388e+50,010952+100 */
+background: #010952; /* Old browsers */
+background: -moz-linear-gradient(top, #010952 0%, #0a388e 50%, #010952 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #010952 0%,#0a388e 50%,#010952 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #010952 0%,#0a388e 50%,#010952 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#010952', endColorstr='#010952',GradientType=0 ); /* IE6-9 */
+	}
+	.scorepoke{
+		width: 100%;
+		position: relative;
+	}
+	.pokediv{
+		width: 40px;
+		height: 55px;
+		position: absolute;
+		left: 0;
+		right: 0;
+		margin: auto;
+		top: 5px;
+		
+	}
+	.front {
+        background-image: url("images/z4.png");
+		padding: 1px;
+		border: 1px solid #ccc;
+		
+      }
+      .back {
+        
+		  
+		  
+		  
+      }
+	
+	.puku{
+		font-size: 18px;
+		  text-align: center;
+		width: 40px;
+		height: 55px;
+		position: absolute;
+		border: 1px solid #ccc;
+	}
+	
+
+	
+	.dtmenu{
+		width: 100%;
+		height: 45px;
+		line-height: 45px;
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+	}
+	.dtmenu>ul{
+		
+	}
+	.dtmenu>ul>li{
+		width: 100px;
+		border-right: 1px solid #ccc;
+		float: left;
+		text-align: center;
+	}
+	.dtmenu>ul>li a{
+		display: block;
+		color:#333;
+		text-decoration: none;
+	}
+	.playservice{
+		width: 100%;
+		height: 55px;
+		line-height: 55px;
+	}
+	.psleft{
+		float: left;
+		padding-left: 20px;
+	}
+	.psright{
+		float: right;
+		padding-right: 10px;
+	}
+	.psright a{
+		color:#ff0000;
+	}
+	.pslefticon{
+		width: 14px;
+		height: 14px;
+		display:inline-block;
+		margin-right: 5px;
+	}
+	
+	.dtgame{
+		width: 100%;
+		position: relative;
+		text-align: center;
+	}
+	.dtgameArea{
+		width: 265px;
+		height: 280px;
+		float: left;
+		position: relative;
+		background-color: #ececec;
+		margin-left: 5px;
+		border-radius: 12px;
+		overflow: hidden;
+		cursor: pointer;
+	}
+	.dtgame .dtgameArea:last-child{
+		
+	}
+	.dtgamebg{
+		width: 100%;
+		height: 280px;
+		line-height: 280px;
+		font-size: 80px;
+		color:rgba(0,0,0,0.8);
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	.dtgameAreaHead{
+		height: 40px;
+		position: absolute;
+		width: 100%;
+		color:#ffff98;
+		line-height: 40px;
+		font-size: 27px;
+		background-color: #564538;
+	}
+	.dtgameAreaFooter{
+		height: 40px;
+		position: absolute;
+		width: 100%;
+		color:#ff9d2e;
+		line-height: 40px;
+		font-size: 22px;
+		background-color: #564538;
+		bottom: 0;
+	}
+	.dtgameAreaNumber{
+		height: 30px;
+		line-height: 30px;
+		width: 25%;
+		font-size: 22px;
+		color:#adaa9e;
+		position: absolute;
+		right: 0;
+		bottom: 40px;
+		background-color: rgba(0,0,0,0.8);
+	}
+	.dtgameAreaCenter{
+		width: 100px;
+		height: 100px;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+		
+	}
+	.dtplaybtn{
+		width: 100%;
+		float: left;
+		margin-top: 15px;
+		margin-bottom: 15px;
+	}
+	.dtlinetext{
+		width: 14px;;
+		font-size: 14px;
+		display: inline-block;
+	}
+	.dtmoneybtn>ul>li{
+		float: left;
+		width: 50px;
+		height: 50px;
+		margin-left: 2px;
+	}
+	.dtmoneybtn>ul>li:not(.target){
+		opacity: 0.5;
+    	filter: grayscale(100%);
+	}
+	
+	.dtmoney{
+		width: 50px;
+		height: 50px;
+		border-radius: 50px;
+		background-image:url("images/fun.png");
+		font-size: 12px;
+		color:#333;
+		font-weight: bold;
+		line-height: 45px;
+		text-align: center;
+	}
+	
+	.dtcolor1{background-color: #333e7a;}
+	.dtcolor1:after{content:"5";}
+	.dtcolor2{background-color: #43ca59;}
+	.dtcolor2:after{content:"10";}
+	.dtcolor3{background-color: #ecc055;}
+	.dtcolor3:after{content:"50";}
+	.dtcolor4{background-color: #f2993a;}
+	.dtcolor4:after{content:"100";}
+	.dtcolor5{background-color: #f43e5c;}
+	.dtcolor5:after{content:"500";}
+	.dtcolor6{background-color: #4770a5;}
+	.dtcolor6:after{content:"1000";}
+	.dtcolor7{background-color: #724bad;}
+	.dtcolor7:after{content:"5000";}
+	.dtcolor8{background-color: #43b3aa;}
+	.dtcolor8:after{content:"1W";}
+	.dtcolor9{background-color: #f354cf;}
+	.dtcolor9:after{content:"5W";}
+	.dtcolor10{background-color: #5cbfce;}
+	.dtcolor10:after{content:"10W";}
+	.dtbtnClass{
+		padding-left: 12px;
+		padding-right: 12px;
+		font-size: 17px;
+		color:#fff;
+		display: inline-block;
+		text-align: center;
+		border-radius: 5px;
+		height: 40px;
+		line-height: 40px;
+		
+	}
+	.dtbtnClass a{
+		display: inline-block;
+		color:#fff;
+	}
+	.dtbtngreen{
+		background-color:#ad9578;
+	}
+	.dtbtnred{
+		background-color:#f28923;
+	}
+	.dtbtngray{
+		background-color:#a9adae;
+	}
+	.dtbtncoffee{
+		background-color: #9f886d;
+	}
+	.dtbtncoffeemore{
+		background-color: #632a08;
+	}
+	.savePlace{
+		width: 100%;
+		border-top: 1px solid #ccc;
+	}
+	.saveTableDiv{
+		width: 100%;
+		margin-top: 15px;
+	}
+	.saveTableDiv>table{
+		box-sizing: border-box;
+		width: 1100px;
+		margin-left: 10px;
+		border: 2px solid #f0f0f0;
+	}
+	.saveTableDiv td{
+		height: 20px;
+		text-align: center;
+		font-size: 20px;
+		border: 1px solid #f0f0f0;
+		
+	}
+	.saveTableDiv td:after{
+		content: "●";
+		color:#fff;
+	}
+	.saveTableDiv td.tablegreen:after{
+		content: "●";
+		color:#00cb13;
+	}
+	.saveTableDiv td.tablered:after{
+		content: "●";
+		color:#ff0202;
+	}
+	.saveTableDiv td.tableblue:after{
+		content: "●";
+		color:#0000ff;
+		
+	}
+	.mysaveTable{
+		width: 100%;
+	}
+	.mysaveTable tr td:nth-child(2){
+		color:#ff9400;
+	}
+	.mysaveTable td{
+		padding-top: 8px;
+		padding-bottom: 8px;
+		border-right: 1px dashed #ccc;
+		border-bottom: 1px dashed #ccc;
+		color:#5a5856;
+		text-align: center;
+	}
+	.mysaveTable tr td:last-child{
+		border-right: none;
+	}
+	.righttableline>tbody>tr>td:first-child{
+		border-right: 1px dashed #ccc;
+	}
+	.mysaveTable tr:first-child td{
+		background-color: #f2f4f7;
+		border-bottom: 1px solid #ccc;
+		border-right: 1px solid #f2f4f7;
+	}
+	.dtcontent{
+		width: 100%;
+	}
+	.pukumovemove{
+		width: 40px;
+		height: 55px;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+	}
+	.pukumovemoveBody{
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+	.sharemoneyDiv{
+		position: absolute;
+		left: 0;
+		top:0;
+		pointer-events : none; 
+	}
+	.sharemoney{
+		width: 30px;
+		height: 30px;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	.sharemoney>img{
+		width: 100%;
+		height: 100%;
+	}
+	.dtgamelight{
+		width: 100%;
+		height: 100%;
+		background-image:url("images/light.png");
+		position: absolute;
+		left: 0;
+		top: 0;
+		background-size: 100% 100%;
+	animation-name: dtgamelight;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+	animation-iteration-count:infinite ;
+
+/* Safari and Chrome: */
+	-webkit-animation-name: dtgamelight;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-fill-mode: forwards;
+	-webkit-animation-iteration-count:infinite ;
+		display: none;
+}
+@keyframes dtgamelight
+{
+0%   {
+	opacity: 0;
+	}
+	50%   {
+	opacity: 1;
+	}
+100% {
+	opacity: 0;
+	}
+
+}
+@-webkit-keyframes dtgamelight 
+{
+0%   {
+	opacity: 0;
+	}
+	50%   {
+	opacity: 1;
+	}
+100% {
+	opacity: 0;
+	}
+
+}
+
+
+</style>
+
+</head>
+
+<body>
+	<div id="container">
+		<!--inside-->
+		<div class="inside">
+			<!--資訊表投-->
+			<div class="dttitle dtgray">
+				<!--左上LOGO-->
+				<div class="dttitle_left">
+					<div class="dtlogo_text">
+						万人龙虎
+					</div>
+					<div class="dtlogo_img">
+						<div class="dtlogo_img_src"><img src="images/logo.png"></div>
+					</div>
+				</div><!--//左上LOGO-->
+				<!--中倒數-->
+				<div class="dttitle_center">
+					<div class="dttitle_data">
+						第<span class="dtred">20190402871</span>期
+					</div>
+					<div class="dttitle_type">
+						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+							<tbody>
+								<tr>
+									<td align="right" height="100%" valign="middle" width="50%">
+										<div class="timerun"></div>
+									</td>
+									<td align="left" valign="middle">
+										<div class="timeType"></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div><!--//中倒數-->
+				<!--右開牌-->
+				<div class="dttitle_right">
+					<div class="dtscore">
+						
+						<div class="dtscorebottomline"></div>
+						
+						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+							<tbody>
+								<tr>
+									<td align="right" height="100%" valign="middle" width="50%">
+										<div class="dtscore_left dtscorecontent">
+											<div class="scoreNum">
+												
+											</div>
+											<div class="scorebar">
+												龙
+											</div>
+											<div class="scorepoke">
+												<div class="pokediv">
+													<div class="front"></div>
+													<div class="back"><div class="puku spade12"></div></div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td align="left" valign="middle">
+										<div class="dtscore_right dtscorecontent">
+											<div class="scoreNum">
+												
+											</div>
+											<div class="scorebar">
+												虎
+											</div>
+											<div class="scorepoke">
+												<div class="pokediv">
+													<div class="front"></div>
+													<div class="back"><div class="puku spade12"></div></div>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					
+					
+					<!--洗牌-->
+					
+					<div class="pukumovemove">
+					
+						<div class="pukumovemoveBody">
+						
+							<!--<div class="puku pukuresh heart6"></div>
+							<div class="puku pukuresh rhombus12"></div>
+							<div class="puku pukuresh spade9"></div>
+							<div class="puku pukuresh flower4"></div>
+							<div class="puku pukuresh rhombus10"></div>-->
+						
+						
+						</div>
+						
+					
+					</div>
+					
+					
+					<!--//洗牌-->
+					
+					
+				</div><!--//右開牌-->
+			</div><!--//資訊表投-->
+			<!--採種菜單-->
+			<div class="dtmenu">
+				<ul>
+					<li>
+						<a href="#">万人牛牛</a>
+					</li>
+					<li>
+						<a href="#">万人炸金花</a>
+					</li>
+					<li>
+						<a href="#">万人龙虎</a>
+					</li>
+					<li>
+						<a href="#">万人红黑大战</a>
+					</li>
+				</ul>
+			</div><!--//採種菜單-->
+			<!--精彩4宮格-->
+			<div class="dtcontent">
+				<table border="0" cellpadding="0" cellspacing="0" width="100%" class="righttableline">
+					<tbody>
+						<tr>
+							<td valign="middle" width="820">
+								<!--玩法說明-->
+								<div class="playservice dtgray">
+									<div class="psleft">
+										<span class="pslefticon"><img src="images/icon1.png"></span>开奖结果为2张牌，左为龙，右为虎，竞猜双方比点结果为龙大虎大或和。
+									</div>
+									<div class="psright">
+										<a href="#">玩法說明</a>
+									</div>
+								</div><!--//玩法說明-->
+							</td>
+							<td valign="middle">
+								<div class="mysavebtn">
+									<div class="dtbtnClass dtbtncoffee" style="width: 100px; margin-left: 10px;">
+										<a href="javascript:openpuku();">今日投注</a>
+									</div>
+									<div class="dtbtnClass dtbtncoffeemore" style="width: 100px;">
+										<a href="javascript:closepuku();">今日开奖</a>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<!--遊戲區域-->
+								<div class="dtgame">
+									<div class="dtgameArea">
+										<div class="dtgamebg">
+											龙
+										</div>
+										<div class="dtgameAreaHead dah0">
+											0
+										</div>
+										<div class="dtgameAreaCenter center0">
+										
+										
+										
+										
+										</div>
+										<div class="dtgameAreaFooter">
+											0
+										</div>
+										<div class="dtgameAreaNumber">
+											2.02
+										</div>
+										
+										<div class="dtgamelight"></div>
+										
+									</div>
+									<div class="dtgameArea">
+										<div class="dtgamebg">
+											和
+										</div>
+										<div class="dtgameAreaHead dah1">
+											0
+										</div>
+										<div class="dtgameAreaCenter center1"></div>
+										<div class="dtgameAreaFooter">
+											0
+										</div>
+										<div class="dtgameAreaNumber">
+											2.02
+										</div>
+										<div class="dtgamelight"></div>
+									</div>
+									<div class="dtgameArea">
+										<div class="dtgamebg">
+											虎
+										</div>
+										<div class="dtgameAreaHead dah2">
+											0
+										</div>
+										<div class="dtgameAreaCenter center2"></div>
+										<div class="dtgameAreaFooter">
+											0
+										</div>
+										<div class="dtgameAreaNumber">
+											2.02
+										</div>
+										<div class="dtgamelight"></div>
+									</div>
+								</div><!--//遊戲區域-->
+								<!--籌碼投注區-->
+								<div class="dtplaybtn dtgray">
+									<table border="0" cellpadding="0" cellspacing="0" width="100%">
+										<tbody>
+											<tr>
+												<td valign="middle" width="30" align="center">
+													<div class="dtlinetext">
+														筹码
+													</div>
+												</td>
+												<td valign="middle">
+													<div class="dtmoneybtn">
+														<ul>
+															<li><a href="javascript:void(0)" onClick="moneyChange(5,this)"><div class="dtmoney dtcolor1"></div></a></li>
+															<li class="target"><a href="javascript:void(0)" onClick="moneyChange(10,this)"><div class="dtmoney dtcolor2"></div></a></li>
+															<li><a href="javascript:void(0)" onClick="moneyChange(50,this)"><div class="dtmoney dtcolor3"></div></a></li>
+															<li><a href="javascript:void(0)" onClick="moneyChange(100,this)"><div class="dtmoney dtcolor4"></div></a></li>
+															<li><a href="javascript:void(0)" onClick="moneyChange(500,this)"><div class="dtmoney dtcolor5"></div></a></li>
+															<li><a href="javascript:void(0)" onClick="moneyChange(1000,this)"><div class="dtmoney dtcolor6"></div></a></li>
+															<li><a href="javascript:void(0)" onClick="moneyChange(5000,this)"><div class="dtmoney dtcolor7"></div></a></li>
+															<li><a href="javascript:void(0)" onClick="moneyChange(10000,this)"><div class="dtmoney dtcolor8"></div></a></li>
+															<li><a href="javascript:void(0)" onClick="moneyChange(50000,this)"><div class="dtmoney dtcolor9"></div></a></li>
+															<li><a href="javascript:void(0)" onClick="moneyChange(100000,this)"><div class="dtmoney dtcolor10"></div></a></li>
+														</ul>
+													</div>
+												</td>
+												<td align="right" valign="middle">
+													<div class="dtbtnClass dtbtngreen">
+														<a href="javascript:clearmoney()">取消</a>
+													</div>
+													<div class="dtbtnClass dtbtnred">
+														<a href="javascript:shareMoney()">确定投注</a>
+													</div>
+													<div class="dtbtnClass dtbtngray" style="margin-right: 10px;">
+														<a href="#">重复投注</a>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div><!--//籌碼投注區-->
+							</td>
+							<td valign="top">
+								<div class="mysaveTable">
+									<table border="0" cellpadding="0" cellspacing="0" width="100%">
+										<tbody>
+											<tr>
+												<td>期号</td>
+												<td>开奖号</td>
+												<td>开奖时间</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+											<tr>
+												<td>20190402876</td>
+												<td>♠1,♥13</td>
+												<td>14:34:49</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!--//精彩4宮格-->
+			<!--紀錄區-->
+			<div class="saveTableDiv">
+				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+					<tbody>
+						<tr>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+						</tr>
+						<tr>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+						</tr>
+						<tr>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+						</tr>
+						<tr>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+						</tr>
+						<tr>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablered"></td>
+							<td valign="middle" class="tableblue"></td>
+							<td valign="middle" class="tablegreen"></td>
+							<td valign="middle" class="tablegreen"></td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</div><!--//紀錄區-->
+			
+			
+			<div class="sharemoneyDiv"></div>
+			
+			
+		</div><!--inside-->
+	</div>
+	
+	
+	
+	
+</body>
+</html>
